@@ -9,6 +9,10 @@ from app.schemas.requests import (
     LessonSessionRequest,
     TechniqueRequest,
 )
+from app.schemas.responses import (
+    LessonSessionResponse,
+    SyllabusResponse,
+)
 
 from app.services.learning_service import LearningService
 
@@ -32,7 +36,7 @@ def service(
 # ======================================================
 
 
-@router.post("/generateSyllabusFromGoal")
+@router.post("/generateSyllabusFromGoal", response_model=SyllabusResponse)
 async def generate_syllabus(
     request: LearningGoalRequest,
     taxonomy_id: int,
@@ -63,7 +67,7 @@ async def generate_syllabus(
 # ======================================================
 
 
-@router.post("/generateLessonSession")
+@router.post("/generateLessonSession", response_model=LessonSessionResponse)
 async def generate_lesson_session(
     request: LessonSessionRequest,
     stage_id: int,

@@ -47,6 +47,10 @@ from app.schemas.requests import (
     TechniqueRequest,
     AssessmentRequest,
 )
+from app.schemas.responses import (
+    LessonSessionResponse,
+    SyllabusResponse,
+)
 
 
 class LearningService:
@@ -109,12 +113,13 @@ class LearningService:
             json_mode=True,
         )
 
+        result_payload = result if isinstance(result, dict) else {}
 
-        return {
-            "goal": request.description,
-            "taxonomy": taxonomy.name,
-            "syllabus": result,
-        }
+        return SyllabusResponse(
+            goal_description=request.description,
+            taxonomy_name=taxonomy.name,
+            subjects=result_payload.get("subjects", []),
+        )
 
 
 
@@ -200,6 +205,7 @@ class LearningService:
                 ),
                 techniques=techniques,
                 assessments=assessments,
+                learning_items=request.learning_items,
             )
         )
 
@@ -209,13 +215,13 @@ class LearningService:
             json_mode=True,
         )
 
+        result_payload = result if isinstance(result, dict) else {}
 
-        return {
-            "goal_id": request.goal_id,
-            "topic": request.topic,
-            "stage": stage.name,
-            "lesson": result,
-        }
+        return LessonSessionResponse(
+            topic=request.topic,
+            stage=stage.name,
+            learning_items=result_payload.get("learning_items", []),
+        )
 
 
 
@@ -249,7 +255,6 @@ class LearningService:
         prompt = (
             self.prompt_builder
             .build_technique_prompt(
-                goal=request.goal_id,
                 topic=request.topic,
                 technique=technique,
             )
@@ -305,7 +310,6 @@ class LearningService:
         prompt = (
             self.prompt_builder
             .build_assessment_prompt(
-                goal=request.goal_id,
                 topic=request.topic,
                 assessment=assessment,
             )

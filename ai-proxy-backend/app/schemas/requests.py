@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # ==========================================================
@@ -12,6 +14,8 @@ class LearningGoalRequest(BaseModel):
     """
     User creates a learning goal.
     """
+
+    model_config = ConfigDict(extra="forbid")
 
     description: str = Field(
         ...,
@@ -38,6 +42,26 @@ class LearningGoalRequest(BaseModel):
     )
 
 
+# ==========================================================
+# RECURSIVE LEARNING ITEMS
+# ==========================================================
+
+
+class LearningItemRequest(BaseModel):
+    """
+    Recursive learning item used by the syllabus tree and lesson session.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+
+    description: Optional[str] = None
+
+    content: Optional[str] = None
+
+    learning_items: List["LearningItemRequest"] = Field(default_factory=list)
+
 
 # ==========================================================
 # LESSON SESSION
@@ -46,15 +70,16 @@ class LearningGoalRequest(BaseModel):
 
 class LessonSessionRequest(BaseModel):
     """
-    Generate a lesson session for a topic.
+    Generate a lesson session for a topic using the leaf learning items.
     """
 
-    goal_id: str
+    model_config = ConfigDict(extra="forbid")
 
     goal: str
 
     topic: str
 
+    learning_items: List[LearningItemRequest] = Field(default_factory=list)
 
 
 # ==========================================================
@@ -67,16 +92,13 @@ class TechniqueRequest(BaseModel):
     User requests another technique.
     """
 
-    goal_id: str
+    model_config = ConfigDict(extra="forbid")
 
     topic: str
 
     stage_definition_id: int
 
-    previous_items: List[str] = Field(
-        default_factory=list
-    )
-
+    previous_items: List[str] = Field(default_factory=list)
 
 
 # ==========================================================
@@ -89,12 +111,10 @@ class AssessmentRequest(BaseModel):
     User requests another assessment.
     """
 
-    goal_id: str
+    model_config = ConfigDict(extra="forbid")
 
     topic: str
 
     technique_id: int
 
-    previous_items: List[str] = Field(
-        default_factory=list
-    )
+    previous_items: List[str] = Field(default_factory=list)

@@ -32,6 +32,7 @@ from app.db.models import (
     Taxonomy,
     Technique,
 )
+from app.schemas.requests import LearningItemRequest
 
 
 class PromptBuilder:
@@ -88,6 +89,23 @@ Description:
     # ======================================================
 
     @staticmethod
+    def _render_learning_items(
+        items: List[LearningItemRequest],
+    ) -> str:
+        rendered: List[str] = []
+
+        for item in items:
+            rendered.append(
+                f"Name: {item.name}\n"
+                f"Description: {item.description or ''}\n"
+                f"Content: {item.content or ''}"
+            )
+
+            # only the last leaf learning item will be considered to create lesson session so even if the client provide nested only only the high level is considered
+
+        return "\n".join(rendered)
+
+    @staticmethod
     def build_lesson_prompt(
         goal: str,
         topic: str,
@@ -95,61 +113,30 @@ Description:
         stage_definition: StageDefinition,
         techniques: List[Technique],
         assessments: List[Assessment],
+        learning_items: List[LearningItemRequest],
     ) -> str:
 
 
-        technique_text = "\n\n".join(
+        technique_text = ",".join(
             [
-                """
-Technique:
-{name}
-
-Category:
-{category}
-
-Purpose:
-{purpose}
-
-Difficulty:
-{difficulty}
-
-Estimated Time:
-{estimated_time}
-""".format(
+                "{name}".format(
                     name=t.name,
-                    category=t.category.value,
-                    purpose=t.purpose,
-                    difficulty=t.difficulty,
-                    estimated_time=t.estimated_time,
                 )
                 for t in techniques
             ]
         )
 
 
-        assessment_text = "\n\n".join(
+        assessment_text = ",".join(
             [
-                """
-Assessment:
-{name}
-
-Category:
-{category}
-
-Description:
-{description}
-
-Difficulty:
-{difficulty}
-""".format(
+                "{name}".format(
                     name=a.name,
-                    category=a.category.value,
-                    description=a.description,
-                    difficulty=a.difficulty,
                 )
                 for a in assessments
             ]
         )
+
+        learning_items_text = PromptBuilder._render_learning_items(learning_items)
 
 
         return LESSON_SESSION_PROMPT.format(
@@ -159,8 +146,9 @@ Difficulty:
 
             stage=stage.name,
 
-            stage_summary=(
-                stage_definition.summary
+            learning_items=(
+                learning_items_text
+                or "No source learning items provided."
             ),
 
             techniques=technique_text,

@@ -14,14 +14,12 @@ Dynamic values are injected by prompt_builder.py.
 SYLLABUS_GENERATION_PROMPT = """
 You are an expert learning curriculum designer.
 
-Your task is to generate a syllabus from a user's learning goal.
+Your task is to generate a syllabus tree from a user's learning goal.
 
-The curriculum structure is controlled by predefined learning taxonomy,
-stages, and stage definitions.
+The curriculum structure is controlled by the predefined taxonomy and stages.
+You must NOT invent new stages or new hierarchy types.
 
-You must NOT invent new stages.
-
-Use the provided structure and generate meaningful topics.
+Use the provided structure and generate meaningful subjects, modules, and learning items.
 
 Learning Goal:
 {goal_description}
@@ -44,15 +42,31 @@ Requirements:
 - Respect the learning progression.
 - Make topics practical.
 - Match the user's requested understanding and memorization level.
+- Use only the keys: "subjects", "name", "description", "modules", "learning_items", "content".
+- Do not include any extra fields.
 - Return valid JSON only.
 
 JSON format:
 
 {{
-    "topics": [
+    "subjects": [
         {{
             "name": "",
-            "description": ""
+            "description": "",
+            "modules": [
+                {{
+                    "name": "",
+                    "description": "",
+                    "learning_items": [
+                        {{
+                            "name": "",
+                            "description": "",
+                            "content": "",
+                            "learning_items": []
+                        }}
+                    ]
+                }}
+            ]
         }}
     ]
 }}
@@ -92,9 +106,9 @@ Stage:
 {stage}
 
 
-Stage Summary:
+Source Learning Items:
 
-{stage_summary}
+{learning_items}
 
 
 Allowed Techniques:
@@ -109,26 +123,22 @@ Allowed Assessments:
 
 Rules:
 
-1. Technique content must be Markdown.
-2. Make explanations clear and beginner friendly.
-3. Follow the technique purpose.
-4. Assessment should test the lesson.
-5. Return JSON only.
+1. Use the provided leaf learning items as the lesson source.
+2. Output a JSON object with a single key: "learning_items".
+3. Each item must be a learning item with only the fields: "name", "description", "content", and optional nested "learning_items" when needed.
+4. Do not include any extra fields.
+5. Make explanations clear and beginner friendly.
+6. Return JSON only.
 
 
 Output:
 
 {{
-    "learningItems": [
+    "learning_items": [
         {{
-            "type": "technique",
             "name": "",
-            "markdown": ""
-        }},
-        {{
-            "type": "assessment",
-            "name": "",
-            "content": {{}}
+            "description": "",
+            "content": ""
         }}
     ]
 }}
