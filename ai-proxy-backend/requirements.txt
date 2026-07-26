@@ -9,7 +9,7 @@ pydantic-settings==2.10.1
 
 python-dotenv==1.1.1
 
-openai==1.99.9
+google-genai
 
 httpx==0.28.1
 

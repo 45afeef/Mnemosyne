@@ -52,7 +52,7 @@ class PromptBuilder:
 
         stage_text = "\n\n".join(
             [
-                f"""
+                """
 Stage:
 {name}
 
@@ -100,7 +100,7 @@ Description:
 
         technique_text = "\n\n".join(
             [
-                f"""
+                """
 Technique:
 {name}
 
@@ -129,7 +129,7 @@ Estimated Time:
 
         assessment_text = "\n\n".join(
             [
-                f"""
+                """
 Assessment:
 {name}
 

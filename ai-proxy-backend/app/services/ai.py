@@ -17,11 +17,14 @@ await ai.generate(prompt)
 
 and never import the LLM SDK directly.
 """
+from app.core.config import settings
+
 
 import json
-from typing import Any, Optional
+from typing import Any
 
-from openai import AsyncOpenAI
+from google import genai
+from google.genai import types
 
 from app.core.config import settings
 
@@ -35,86 +38,45 @@ class AIService:
     """
 
     def __init__(self):
-        self.client = AsyncOpenAI(
+        self.client = genai.Client(
             api_key=settings.AI_API_KEY
         )
 
         self.model = settings.MODEL
-
 
     async def generate(
         self,
         prompt: str,
         json_mode: bool = False,
     ) -> str | dict[str, Any]:
-        """
-        Generate content from the LLM.
-
-        Args:
-            prompt:
-                Final prepared prompt.
-
-            json_mode:
-                Whether the response should be parsed as JSON.
-        """
-
         try:
-
-            response = await self.client.chat.completions.create(
-
-                model=self.model,
-
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are a helpful AI "
-                            "learning assistant."
-                        ),
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt,
-                    },
-                ],
-
+            config = types.GenerateContentConfig(
                 temperature=0.7,
-
-                response_format=(
-                    {
-                        "type": "json_object"
-                    }
-                    if json_mode
-                    else None
-                ),
+                system_instruction="You are a helpful AI learning assistant.",
             )
 
+            if json_mode:
+                config.response_mime_type = "application/json"
 
-            content = (
-                response
-                .choices[0]
-                .message
-                .content
+            response = await self.client.aio.models.generate_content(
+                model=self.model,
+                contents=prompt,
+                config=config,
             )
 
+            content = response.text
 
-            if content is None:
-                raise RuntimeError(
-                    "AI returned empty response"
-                )
-
+            if not content:
+                raise RuntimeError("AI returned empty response")
 
             if json_mode:
                 return json.loads(content)
 
-
             return content
 
-
         except Exception as error:
-
             raise RuntimeError(
-                f"AI generation failed: {str(error)}"
+                f"AI generation failed: {error}"
             )
 
 
