@@ -166,6 +166,20 @@ class LearningRepository:
         return techniques
 
 
+    def get_all_techniques(
+        self,
+    ) -> List[Technique]:
+        """Return all techniques."""
+
+        statement = (
+            select(Technique)
+            .order_by(Technique.name)
+        )
+
+        return list(self.db.scalars(statement))
+
+
+
 
     # ======================================================
     # ASSESSMENTS
@@ -223,6 +237,19 @@ class LearningRepository:
                 )
 
         return assessments
+
+
+    def get_all_assessments(
+        self,
+    ) -> List[Assessment]:
+        """Return all assessments."""
+
+        statement = (
+            select(Assessment)
+            .order_by(Assessment.name)
+        )
+
+        return list(self.db.scalars(statement))
 
 
 

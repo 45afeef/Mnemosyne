@@ -60,8 +60,6 @@ class LearningItemRequest(BaseModel):
 
     content: Optional[str] = None
 
-    learning_items: List["LearningItemRequest"] = Field(default_factory=list)
-
 
 # ==========================================================
 # LESSON SESSION

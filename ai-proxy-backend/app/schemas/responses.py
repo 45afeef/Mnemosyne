@@ -79,18 +79,56 @@ class SyllabusResponse(BaseModel):
 # ==========================================================
 
 
+class TechniqueContentResponse(BaseModel):
+    """
+    A technique block inside a lesson item.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+
+    markdown: str
+
+
+class AssessmentContentResponse(BaseModel):
+    """
+    An assessment block inside a lesson item.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+
+    content: dict
+
+
+class SessionLearningItemResponse(BaseModel):
+    """
+    One lesson item in the session, with techniques and one assessment.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+
+    description: Optional[str] = None
+
+    techniques: List[TechniqueContentResponse] = Field(default_factory=list)
+
+    assessments: List[AssessmentContentResponse] = Field(default_factory=list)
+
+
 class LessonSessionResponse(BaseModel):
     """
-    Lesson session built from the leaf learning items.
+    Lesson session built from ordered lesson items with techniques and assessments.
     """
 
     model_config = ConfigDict(extra="forbid")
 
     topic: str
 
-    stage: Optional[str] = None
-
-    learning_items: List[LearningItemResponse] = Field(default_factory=list)
+    lesson_items: List[SessionLearningItemResponse] = Field(default_factory=list)
 
 
 # ==========================================================

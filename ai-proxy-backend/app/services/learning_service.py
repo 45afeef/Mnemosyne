@@ -131,78 +131,16 @@ class LearningService:
     async def generate_lesson_session(
         self,
         request: LessonSessionRequest,
-        stage_id: int,
     ):
+        techniques = [item.name for item in self.repository.get_all_techniques()]
 
-
-        stage_definition = (
-            self.repository
-            .get_stage_definition(
-                stage_id
-            )
-        )
-
-
-        if not stage_definition:
-
-            raise ValueError(
-                "Stage definition not found"
-            )
-
-
-
-        stage = stage_definition.stage
-
-
-
-        stage_techniques = (
-            self.repository
-            .get_stage_techniques(
-                stage_definition.id
-            )
-        )
-
-
-        techniques = [
-            item.technique
-            for item in stage_techniques
-        ]
-
-
-
-        # Collect assessments attached
-        # to available techniques
-
-        assessments = []
-
-
-        for technique in techniques:
-
-            items = (
-                self.repository
-                .get_assessments_for_technique(
-                    technique.id
-                )
-            )
-
-            assessments.extend(
-                [
-                    x.assessment
-                    for x in items
-                ]
-            )
-
-
+        assessments = [item.name for item in self.repository.get_all_assessments()]
 
         prompt = (
             self.prompt_builder
             .build_lesson_prompt(
                 goal=request.goal,
                 topic=request.topic,
-                stage=stage,
-                stage_definition=(
-                    stage_definition
-                ),
                 techniques=techniques,
                 assessments=assessments,
                 learning_items=request.learning_items,
@@ -219,8 +157,7 @@ class LearningService:
 
         return LessonSessionResponse(
             topic=request.topic,
-            stage=stage.name,
-            learning_items=result_payload.get("learning_items", []),
+            lesson_items=result_payload.get("lesson_items", []),
         )
 
 
@@ -255,6 +192,7 @@ class LearningService:
         prompt = (
             self.prompt_builder
             .build_technique_prompt(
+                goal=request.topic,
                 topic=request.topic,
                 technique=technique,
             )
@@ -310,6 +248,7 @@ class LearningService:
         prompt = (
             self.prompt_builder
             .build_assessment_prompt(
+                goal=request.topic,
                 topic=request.topic,
                 assessment=assessment,
             )

@@ -80,16 +80,12 @@ JSON format:
 
 
 LESSON_SESSION_PROMPT = """
-You are an AI teaching assistant.
+You are an AI teaching assistant designing a low-cognitive-load lesson session.
 
 Generate a lesson session for the given topic.
 
-The teaching strategy is controlled by administrator-defined techniques
-and assessments.
-
-Do not create your own teaching methods.
-
-Use the provided techniques and assessments.
+Use the goal and the source learning items to choose the most suitable techniques and assessments.
+Do not invent new teaching methods.
 
 Goal:
 
@@ -101,44 +97,63 @@ Topic:
 {topic}
 
 
-Stage:
-
-{stage}
-
-
 Source Learning Items:
 
 {learning_items}
 
 
-Allowed Techniques:
+Technique Pool:
 
 {techniques}
 
 
-Allowed Assessments:
+Assessment Pool:
 
 {assessments}
 
 
 Rules:
 
-1. Use the provided leaf learning items as the lesson source.
-2. Output a JSON object with a single key: "learning_items".
-3. Each item must be a learning item with only the fields: "name", "description", "content", and optional nested "learning_items" when needed.
-4. Do not include any extra fields.
-5. Make explanations clear and beginner friendly.
-6. Return JSON only.
-
+1. Use the provided source learning items as the lesson foundation.
+2. Choose the best techniques for the goal and topic, not just generic ones.
+3. Create a short ordered sequence of lesson items with gradually increasing difficulty.
+4. Keep cognitive load low by starting with simple concepts and slowly building complexity.
+5. Each lesson item should be small to medium in length and should teach one focused idea.
+6. Each lesson item must contain:
+   - a "name"
+   - an optional "description"
+   - a "techniques" array with minimum of 3 technique blocks, increase the count based on concept difficulty, select the technique from the pool
+   - a "assessment" array with selected from the pool
+7. Each technique block must be Markdown and should explain one small idea clearly.
+8. Each assessment should be a JSON object with the fields: "name", "content".
+9. The "content" field should be a JSON object with "question", "options", "answer", and "explanation".
+10. Return JSON only.
+11. Do not include any extra fields outside the required structure.
 
 Output:
 
 {{
-    "learning_items": [
+    "lesson_items": [
         {{
             "name": "",
             "description": "",
-            "content": ""
+            "techniques": [
+                {{
+                    "name": "",
+                    "markdown": ""
+                }}
+            ],
+            "assessments":[ 
+                {{
+                    "name": "",
+                    "content": {{
+                        "question": "",
+                        "options": [],
+                        "answer": "",
+                        "explanation": ""
+                    }}
+                }}
+            ]
         }}
     ]
 }}

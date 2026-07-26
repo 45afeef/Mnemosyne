@@ -70,7 +70,6 @@ async def generate_syllabus(
 @router.post("/generateLessonSession", response_model=LessonSessionResponse)
 async def generate_lesson_session(
     request: LessonSessionRequest,
-    stage_id: int,
     learning_service: LearningService = Depends(service),
 ):
 
@@ -80,7 +79,6 @@ async def generate_lesson_session(
             learning_service
             .generate_lesson_session(
                 request,
-                stage_id,
             )
         )
 

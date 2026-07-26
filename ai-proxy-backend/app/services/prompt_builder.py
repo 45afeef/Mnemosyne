@@ -101,58 +101,34 @@ Description:
                 f"Content: {item.content or ''}"
             )
 
-            # only the last leaf learning item will be considered to create lesson session so even if the client provide nested only only the high level is considered
-
         return "\n".join(rendered)
 
     @staticmethod
     def build_lesson_prompt(
         goal: str,
         topic: str,
-        stage: Stage,
-        stage_definition: StageDefinition,
         techniques: List[Technique],
         assessments: List[Assessment],
         learning_items: List[LearningItemRequest],
     ) -> str:
 
 
-        technique_text = ",".join(
-            [
-                "{name}".format(
-                    name=t.name,
-                )
-                for t in techniques
-            ]
-        )
+        technique_text = ",".join(techniques)
 
-
-        assessment_text = ",".join(
-            [
-                "{name}".format(
-                    name=a.name,
-                )
-                for a in assessments
-            ]
-        )
+        assessment_text = ",".join(assessments)
 
         learning_items_text = PromptBuilder._render_learning_items(learning_items)
 
 
         return LESSON_SESSION_PROMPT.format(
             goal=goal,
-
             topic=topic,
-
-            stage=stage.name,
-
             learning_items=(
                 learning_items_text
                 or "No source learning items provided."
             ),
 
             techniques=technique_text,
-
             assessments=assessment_text,
         )
 
