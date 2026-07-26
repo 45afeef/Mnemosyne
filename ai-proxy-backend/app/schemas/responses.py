@@ -143,11 +143,7 @@ class TechniqueResponse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    technique_id: int
-
-    technique_name: str
-
-    category: str
+    name: str
 
     markdown: str
 
@@ -164,10 +160,6 @@ class AssessmentResponse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    assessment_id: int
-
-    assessment_name: str
-
-    category: str
+    name: str
 
     content: dict

@@ -28,7 +28,6 @@ from app.core.prompts import (
 from app.db.models import (
     Assessment,
     Stage,
-    StageDefinition,
     Taxonomy,
     Technique,
 )
@@ -107,8 +106,8 @@ Description:
     def build_lesson_prompt(
         goal: str,
         topic: str,
-        techniques: List[Technique],
-        assessments: List[Assessment],
+        techniques: List[str],
+        assessments: List[str],
         learning_items: List[LearningItemRequest],
     ) -> str:
 
@@ -138,31 +137,29 @@ Description:
     # ======================================================
 
     @staticmethod
+    def _render_pool(items: List[str]) -> str:
+        return "\n".join(f"- {item}" for item in items)
+
+    @staticmethod
     def build_technique_prompt(
         goal: str,
         topic: str,
-        technique: Technique,
+        technique_pool: List[str],
+        preferred_techniques: List[str],
     ) -> str:
 
+        pool_text = PromptBuilder._render_pool(technique_pool)
+        preferred_text = (
+            "\nPreferred techniques:\n" + PromptBuilder._render_pool(preferred_techniques)
+            if preferred_techniques
+            else ""
+        )
+
         return TECHNIQUE_GENERATION_PROMPT.format(
-
             goal=goal,
-
             topic=topic,
-
-            technique_name=technique.name,
-
-            category=technique.category.value,
-
-            purpose=technique.purpose,
-
-            description=technique.description,
-
-            difficulty=technique.difficulty,
-
-            estimated_time=(
-                technique.estimated_time
-            ),
+            technique_pool=pool_text,
+            preferred_techniques=preferred_text,
         )
 
 
@@ -174,20 +171,20 @@ Description:
     def build_assessment_prompt(
         goal: str,
         topic: str,
-        assessment: Assessment,
+        assessment_pool: List[str],
+        preferred_assessments: List[str],
     ) -> str:
 
+        pool_text = PromptBuilder._render_pool(assessment_pool)
+        preferred_text = (
+            "\nPreferred assessments:\n" + PromptBuilder._render_pool(preferred_assessments)
+            if preferred_assessments
+            else ""
+        )
+
         return ASSESSMENT_GENERATION_PROMPT.format(
-
             goal=goal,
-
             topic=topic,
-
-            name=assessment.name,
-
-            category=assessment.category.value,
-
-            description=assessment.description,
-
-            difficulty=assessment.difficulty,
+            assessment_pool=pool_text,
+            preferred_assessments=preferred_text,
         )

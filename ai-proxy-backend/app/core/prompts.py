@@ -169,7 +169,7 @@ Output:
 TECHNIQUE_GENERATION_PROMPT = """
 You are generating one learning technique.
 
-Use the technique definition provided by the learning system.
+Use the provided technique pool to inspire a new, user-friendly teaching technique.
 
 Goal:
 
@@ -181,42 +181,25 @@ Topic:
 {topic}
 
 
-Technique:
+Technique Pool:
 
-Name:
-{technique_name}
-
-
-Category:
-{category}
+{technique_pool}
 
 
-Purpose:
-
-{purpose}
-
-
-Description:
-
-{description}
-
-
-Difficulty:
-
-{difficulty}
-
-
-Estimated Time:
-
-{estimated_time}
+{preferred_techniques}
 
 
 Instructions:
+- Choose one technique or combine ideas from the pool.
+- If preferred techniques are provided, favor them.
+- Generate a clear name and a Markdown explanation.
+- Return valid JSON only.
 
-- Generate only the teaching content.
-- Output Markdown.
-- Follow the technique purpose.
-- Do not mention this instruction.
+JSON format:
+{{
+    "name": "",
+    "markdown": ""
+}}
 """
 
 
@@ -229,7 +212,7 @@ Instructions:
 ASSESSMENT_GENERATION_PROMPT = """
 You are generating one learning assessment.
 
-Follow the assessment configuration.
+Use the provided assessment pool to inspire a new, practical assessment.
 
 Goal:
 
@@ -241,38 +224,28 @@ Topic:
 {topic}
 
 
-Assessment Type:
+Assessment Pool:
 
-{name}
-
-
-Category:
-
-{category}
+{assessment_pool}
 
 
-Description:
-
-{description}
-
-
-Difficulty:
-
-{difficulty}
+{preferred_assessments}
 
 
 Rules:
-
-- Match the difficulty level.
-- Test the learner's understanding.
-- Return JSON only.
+- Choose one assessment type from the pool or combine ideas from the list.
+- If preferred assessments are provided, favor them.
+- Match the user's topic and level.
+- Return valid JSON only.
 
 Expected format:
-
 {{
-    "question": "",
-    "options": [],
-    "answer": "",
-    "explanation": ""
+    "name": "",
+    "content": {{
+        "question": "",
+        "options": [],
+        "answer": "",
+        "explanation": ""
+    }}
 }}
 """

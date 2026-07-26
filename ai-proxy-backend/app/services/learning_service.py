@@ -172,47 +172,43 @@ class LearningService:
         request: TechniqueRequest,
     ):
 
+        all_techniques = [
+            item.name
+            for item in self.repository.get_all_techniques()
+        ]
 
-        technique = (
-            self.repository
-            .get_best_technique(
-                request.stage_definition_id,
-                request.previous_items,
-            )
-        )
+        if not all_techniques:
+            raise ValueError("No technique definitions available")
 
+        technique_pool = [
+            name
+            for name in all_techniques
+            if name not in request.previous_items
+        ]
 
-        if not technique:
-
-            raise ValueError(
-                "No new technique available"
-            )
-
+        if not technique_pool:
+            technique_pool = all_techniques
 
         prompt = (
             self.prompt_builder
             .build_technique_prompt(
                 goal=request.topic,
                 topic=request.topic,
-                technique=technique,
+                technique_pool=technique_pool,
+                preferred_techniques=request.preferred_techniques,
             )
         )
 
-
-
         result = await ai_service.generate(
-            prompt
+            prompt,
+            json_mode=True,
         )
 
-
+        result_payload = result if isinstance(result, dict) else {}
 
         return {
-            "technique_id": technique.id,
-            "technique_name": technique.name,
-            "category": (
-                technique.category.value
-            ),
-            "markdown": result,
+            "name": result_payload.get("name", "Technique"),
+            "markdown": result_payload.get("markdown", ""),
         }
 
 
@@ -227,49 +223,41 @@ class LearningService:
         request: AssessmentRequest,
     ):
 
+        all_assessments = [
+            item.name
+            for item in self.repository.get_all_assessments()
+        ]
 
-        assessment = (
-            self.repository
-            .get_best_assessment(
-                request.technique_id,
-                request.previous_items,
-            )
-        )
+        if not all_assessments:
+            raise ValueError("No assessment definitions available")
 
+        assessment_pool = [
+            name
+            for name in all_assessments
+            if name not in request.previous_items
+        ]
 
-        if not assessment:
-
-            raise ValueError(
-                "No new assessment available"
-            )
-
-
+        if not assessment_pool:
+            assessment_pool = all_assessments
 
         prompt = (
             self.prompt_builder
             .build_assessment_prompt(
                 goal=request.topic,
                 topic=request.topic,
-                assessment=assessment,
+                assessment_pool=assessment_pool,
+                preferred_assessments=request.preferred_assessments,
             )
         )
-
-
 
         result = await ai_service.generate(
             prompt,
             json_mode=True,
         )
 
-
+        result_payload = result if isinstance(result, dict) else {}
 
         return {
-            "assessment_id": assessment.id,
-            "assessment_name": (
-                assessment.name
-            ),
-            "category": (
-                assessment.category.value
-            ),
-            "content": result,
+            "name": result_payload.get("name", "Assessment"),
+            "content": result_payload.get("content", {}),
         }

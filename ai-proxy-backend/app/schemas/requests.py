@@ -94,9 +94,15 @@ class TechniqueRequest(BaseModel):
 
     topic: str
 
-    stage_definition_id: int
+    previous_items: List[str] = Field(
+        default_factory=list,
+        description="Previously generated technique names to avoid repetition.",
+    )
 
-    previous_items: List[str] = Field(default_factory=list)
+    preferred_techniques: List[str] = Field(
+        default_factory=list,
+        description="Optional preferred technique names in human-friendly form.",
+    )
 
 
 # ==========================================================
@@ -113,6 +119,12 @@ class AssessmentRequest(BaseModel):
 
     topic: str
 
-    technique_id: int
+    previous_items: List[str] = Field(
+        default_factory=list,
+        description="Previously generated assessment names to avoid repetition.",
+    )
 
-    previous_items: List[str] = Field(default_factory=list)
+    preferred_assessments: List[str] = Field(
+        default_factory=list,
+        description="Optional preferred assessment names in human-friendly form.",
+    )
