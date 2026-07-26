@@ -3,9 +3,48 @@ version: "3.9"
 services:
   api:
     build: .
-    container_name: ai-proxy
-    ports:
-      - "8000:8000"
+    container_name: learning-ai-api
+
     env_file:
       - .env
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - postgres
+
     restart: unless-stopped
+
+
+  postgres:
+    image: postgres:16
+    container_name: learning-ai-postgres
+
+    environment:
+      POSTGRES_USER: learning
+      POSTGRES_PASSWORD: learning_password
+      POSTGRES_DB: learning_ai
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+
+  adminer:
+    image: adminer
+    container_name: learning-ai-db-viewer
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres_data:
