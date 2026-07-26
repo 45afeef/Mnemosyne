@@ -1,6 +1,7 @@
 version: "3.9"
 
 services:
+
   api:
     build: .
     container_name: learning-ai-api
@@ -12,7 +13,8 @@ services:
       - "8000:8000"
 
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
     restart: unless-stopped
 
@@ -31,6 +33,12 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U learning -d learning_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
     restart: unless-stopped
 
