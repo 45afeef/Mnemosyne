@@ -1,13 +1,45 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const primary = Colors.blue;
+  AppColors._();
 
-  static const secondary = Colors.orange;
+  // Brand
+  static const primary = Color(0xFFC0C1FF);
+  static const primaryContainer = Color(0xFF8083FF);
 
-  static const background = Color(0xffF6F7FB);
+  static const secondary = Color(0xFFBEC6E0);
+  static const tertiary = Color(0xFFB9C7E0);
 
-  static const surface = Colors.white;
+  // Background
+  static const background = Color(0xFF051424);
 
-  static const error = Colors.red;
+  static const surface = Color(0xFF051424);
+  static const surfaceDim = Color(0xFF051424);
+  static const surfaceBright = Color(0xFF2C3A4C);
+
+  static const surfaceLowest = Color(0xFF010F1F);
+  static const surfaceLow = Color(0xFF0D1C2D);
+  static const surfaceContainer = Color(0xFF122131);
+  static const surfaceHigh = Color(0xFF1C2B3C);
+  static const surfaceHighest = Color(0xFF273647);
+
+  // Text
+
+  static const onBackground = Color(0xFFD4E4FA);
+  static const onSurface = Color(0xFFD4E4FA);
+  static const onSurfaceVariant = Color(0xFFC7C4D7);
+
+  // Outline
+
+  static const outline = Color(0xFF908FA0);
+  static const outlineVariant = Color(0xFF464554);
+
+  // Semantic
+
+  static const error = Color(0xFFFFB4AB);
+  static const success = Color(0xFF7FCB89);
+
+  static const warning = Color(0xFFFFD166);
+
+  static const info = primary;
 }
