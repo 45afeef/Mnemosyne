@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mnemosyne_learn/app/theme/theme_extension.dart';
 
-import 'colors.dart';
+import 'app_colors.dart';
 import 'app_text_theme.dart';
 
 class AppTheme {
