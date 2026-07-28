@@ -15,19 +15,19 @@ class AiLoader extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-            width: 110,
-            height: 110,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(.18),
-                  blurRadius: 60,
-                  spreadRadius: 10,
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(.18),
+                      blurRadius: 60,
+                      spreadRadius: 10,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
+              )
               .animate(onPlay: (c) => c.repeat())
               .scale(
                 begin: const Offset(.9, .9),
@@ -37,21 +37,19 @@ class AiLoader extends StatelessWidget {
               ),
 
           Container(
-            width: 74,
-            height: 74,
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainer,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.primary.withOpacity(.25),
-              ),
-            ),
-            child: const Icon(
-              Icons.psychology,
-              color: AppColors.primary,
-              size: 34,
-            ),
-          )
+                width: 74,
+                height: 74,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceContainer,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.primary.withOpacity(.25)),
+                ),
+                child: const Icon(
+                  Icons.psychology,
+                  color: AppColors.primary,
+                  size: 34,
+                ),
+              )
               .animate(onPlay: (c) => c.repeat())
               .scale(
                 begin: const Offset(.96, .96),

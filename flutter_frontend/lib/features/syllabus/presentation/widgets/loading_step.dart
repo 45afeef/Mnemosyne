@@ -4,11 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../app/theme/app_colors.dart';
 
 class LoadingStep extends StatelessWidget {
-  const LoadingStep({
-    super.key,
-    required this.title,
-    required this.visible,
-  });
+  const LoadingStep({super.key, required this.title, required this.visible});
 
   final String title;
   final bool visible;
@@ -48,21 +44,19 @@ class LoadingStep extends StatelessWidget {
                         size: 18,
                       ),
                     ).animate().scale(
-                        begin: const Offset(.3, .3),
-                        curve: Curves.elasticOut,
-                      )
+                      begin: const Offset(.3, .3),
+                      curve: Curves.elasticOut,
+                    )
                   : Container(
                       key: const ValueKey("pending"),
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.outlineVariant,
-                        ),
+                        border: Border.all(color: AppColors.outlineVariant),
                       ),
                     ),
-            )
+            ),
           ],
         ),
       ),
