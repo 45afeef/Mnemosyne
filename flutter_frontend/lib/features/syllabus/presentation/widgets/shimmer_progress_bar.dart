@@ -14,17 +14,13 @@ class ShimmerProgressBar extends StatelessWidget {
         height: 6,
         child: Stack(
           children: [
-            Container(
-              color: AppColors.surfaceHighest,
-            ),
+            Container(color: AppColors.surfaceHighest),
             Shimmer.fromColors(
               baseColor: AppColors.primary.withOpacity(.15),
               highlightColor: AppColors.primary,
               child: FractionallySizedBox(
-                widthFactor: .65,
-                child: Container(
-                  color: Colors.white,
-                ),
+                widthFactor: .98,
+                child: Container(color: Colors.white),
               ),
             ),
           ],
