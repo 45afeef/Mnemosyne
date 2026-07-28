@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mnemosyne_learn/features/home/presentation/stagger_animation.dart';
+import '../provider/syllabus_provider.dart';
+import '../state/syllabus_status.dart';
 
 import '../../../../app/theme/app_buttons.dart';
 import '../../../../app/theme/app_colors.dart';
@@ -11,92 +12,6 @@ import '../../../../app/theme/app_spacing.dart';
 import '../widgets/ai_loader.dart';
 import '../widgets/loading_step.dart';
 import '../widgets/shimmer_progress_bar.dart';
-
-enum RoadmapStatus { idle, loading, success, error }
-
-class Roadmap {
-  final String title;
-  final List<String> modules;
-
-  const Roadmap({required this.title, required this.modules});
-}
-
-class RoadmapState {
-  final RoadmapStatus status;
-  final Roadmap? roadmap;
-  final String? errorMessage;
-
-  const RoadmapState({
-    this.status = RoadmapStatus.idle,
-    this.roadmap,
-    this.errorMessage,
-  });
-
-  RoadmapState copyWith({
-    RoadmapStatus? status,
-    Roadmap? roadmap,
-    String? errorMessage,
-  }) {
-    return RoadmapState(
-      status: status ?? this.status,
-
-      roadmap: roadmap ?? this.roadmap,
-
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
-  }
-}
-
-final roadMapProvider = NotifierProvider<RoadMapNotifier, RoadmapState>(
-  RoadMapNotifier.new,
-);
-
-class RoadMapNotifier extends Notifier<RoadmapState> {
-  @override
-  RoadmapState build() {
-    return const RoadmapState();
-  }
-
-  Future<void> generateRoadmap() async {
-    state = state.copyWith(status: RoadmapStatus.loading, errorMessage: null);
-
-    try {
-      // Simulate AI generation time
-
-      await Future.delayed(const Duration(seconds: 20));
-
-      final dummyRoadmap = Roadmap(
-        title: "Flutter Mastery Journey",
-
-        modules: const [
-          "Dart Fundamentals",
-
-          "Flutter Widgets",
-
-          "State Management",
-
-          "Riverpod Architecture",
-
-          "Animations & UX",
-
-          "Building Production Apps",
-        ],
-      );
-
-      state = state.copyWith(
-        status: RoadmapStatus.success,
-
-        roadmap: dummyRoadmap,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        status: RoadmapStatus.error,
-
-        errorMessage: e.toString(),
-      );
-    }
-  }
-}
 
 class GeneratingRoadmapPage extends ConsumerStatefulWidget {
   const GeneratingRoadmapPage({super.key});
@@ -129,9 +44,9 @@ class _GeneratingRoadmapPageState extends ConsumerState<GeneratingRoadmapPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(roadMapProvider.notifier).generateRoadmap();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   ref.read(syllabusNotifierProvider.notifier).generateSyllabus();
+    // });
 
     _startExperience();
 
@@ -178,9 +93,9 @@ class _GeneratingRoadmapPageState extends ConsumerState<GeneratingRoadmapPage> {
   }
 
   bool get _canContinue {
-    final state = ref.read(roadMapProvider);
+    final state = ref.read(syllabusNotifierProvider);
 
-    return _minimumAnimationCompleted && state.status == RoadmapStatus.success;
+    return _minimumAnimationCompleted && state.status == SyllabusStatus.ready;
   }
 
   @override
@@ -193,11 +108,11 @@ class _GeneratingRoadmapPageState extends ConsumerState<GeneratingRoadmapPage> {
 
   @override
   Widget build(BuildContext context) {
-    final roadmapState = ref.watch(roadMapProvider);
+    final roadmapState = ref.watch(syllabusNotifierProvider);
 
     final ready =
         _minimumAnimationCompleted &&
-        roadmapState.status == RoadmapStatus.success;
+        roadmapState.status == SyllabusStatus.ready;
 
     return Scaffold(
       backgroundColor: AppColors.background,

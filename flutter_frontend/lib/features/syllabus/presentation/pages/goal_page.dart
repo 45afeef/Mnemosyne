@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mnemosyne_learn/app/router/routes.dart';
+import 'package:mnemosyne_learn/features/syllabus/presentation/pages/generating_roadmap_page.dart';
 
 import '../../../../app/theme/app_buttons.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../provider/goal_provider.dart';
+import '../provider/syllabus_provider.dart';
 
 class NewGoalPage extends ConsumerStatefulWidget {
   const NewGoalPage({super.key});
@@ -52,6 +56,16 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
 
   void _saveGoal() {
     ref.read(goalNotifierProvider.notifier).saveGoal();
+
+    final goal = ref.read(goalNotifierProvider).selectedGoal;
+
+    if (goal == null) return;
+
+    ref
+        .read(syllabusNotifierProvider.notifier)
+        .generateSyllabus(goalId: goal.id);
+
+    context.push(Routes.generatingRoadmap);
   }
 
   @override
@@ -81,6 +95,20 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
 
           children: [
             const SizedBox(height: 48),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryContainer.withOpacity(.08),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
+                ),
+                child: const Icon(
+                  Icons.emoji_events,
+                  color: AppColors.primary,
+                  size: 48,
+                ),
+              ),
+            ),
 
             const Text(
               "What's your next mission?",
