@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mnemosyne_learn/features/onboarding/presentation/pages/onboarding_page.dart';
 
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/syllabus/presentation/pages/goal_page.dart';
 import 'routes.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
@@ -22,6 +23,10 @@ class AppRouter {
       ),
 
       GoRoute(path: Routes.home, builder: (_, __) => const HomePage()),
+      GoRoute(
+        path: Routes.goalSettingPage,
+        builder: (_, __) => const NewGoalPage(),
+      ),
     ],
 
     errorBuilder: (_, __) {

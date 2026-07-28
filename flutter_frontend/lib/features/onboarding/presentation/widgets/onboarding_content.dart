@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../home/presentation/stagger_animation.dart';
 import 'footer_tags.dart';
 import 'onboarding_description.dart';
 import 'onboarding_logo.dart';
 import 'onboarding_title.dart';
-import 'primary_cta_button.dart';
+import '../../../../app/theme/app_buttons.dart';
 import 'secondary_action.dart';
 
 class OnboardingContent extends StatelessWidget {
@@ -35,7 +37,13 @@ class OnboardingContent extends StatelessWidget {
 
             const Spacer(),
 
-            const PrimaryCTAButton().stagger(3),
+            PrimaryCTAButton(
+              text: "Start Learning",
+              icon: Icons.arrow_forward,
+              onPressed: () {
+                context.push(Routes.goalSettingPage);
+              },
+            ).stagger(3),
 
             const SizedBox(height: 28),
 

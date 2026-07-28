@@ -4,4 +4,6 @@ class Routes {
 
   static const splash = "/splash";
   static const onboarding = "/welcome";
+
+  static const goalSettingPage = "/set-goal";
 }
