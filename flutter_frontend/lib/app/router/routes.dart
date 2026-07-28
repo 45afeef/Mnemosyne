@@ -6,4 +6,5 @@ class Routes {
   static const onboarding = "/welcome";
 
   static const goalSettingPage = "/set-goal";
+  static const generatingRoadmap = "/generating-roadmap";
 }

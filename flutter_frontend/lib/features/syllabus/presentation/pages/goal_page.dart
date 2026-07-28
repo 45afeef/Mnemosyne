@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mnemosyne_learn/app/theme/app_buttons.dart';
 
+import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
@@ -72,7 +74,9 @@ class _NewGoalPageState extends State<NewGoalPage> {
                 child: PrimaryCTAButton(
                   leadingIcon: Icons.bolt,
                   text: "GENERATE LEARNING PATH",
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push(Routes.generatingRoadmap);
+                  },
                 ),
               ),
 

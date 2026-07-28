@@ -35,14 +35,17 @@ class _PrimaryCTAButtonState extends State<PrimaryCTAButton> {
     final disabled = !widget.enabled;
 
     return GestureDetector(
-      onTapDown: disabled ? null : (_) => setState(() => pressed = true),
-      onTapUp: disabled
-          ? null
-          : (_) {
+      onTapDown: widget.enabled ? (_) => setState(() => pressed = true) : null,
+
+      onTapUp: widget.enabled
+          ? (_) {
               setState(() => pressed = false);
               widget.onPressed?.call();
-            },
-      onTapCancel: disabled ? null : () => setState(() => pressed = false),
+            }
+          : null,
+      onTapCancel: widget.enabled
+          ? () => setState(() => pressed = false)
+          : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         width: widget.width,

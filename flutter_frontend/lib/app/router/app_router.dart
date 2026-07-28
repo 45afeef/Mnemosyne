@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mnemosyne_learn/features/syllabus/presentation/pages/generating_roadmap_page.dart';
 
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/syllabus/presentation/pages/goal_page.dart';
@@ -19,17 +20,21 @@ class AppRouter {
 
       GoRoute(
         path: Routes.onboarding,
-        builder: (_, __) => const OnboardingPage(),
+        builder: (_, _) => const OnboardingPage(),
       ),
 
       GoRoute(path: Routes.home, builder: (_, __) => const HomePage()),
       GoRoute(
         path: Routes.goalSettingPage,
-        builder: (_, __) => const NewGoalPage(),
+        builder: (_, _) => const NewGoalPage(),
+      ),
+      GoRoute(
+        path: Routes.generatingRoadmap,
+        builder: (_, _) => const GeneratingRoadmapPage(),
       ),
     ],
 
-    errorBuilder: (_, __) {
+    errorBuilder: (_, _) {
       return const Scaffold(body: Center(child: Text("Page not found")));
     },
   );
