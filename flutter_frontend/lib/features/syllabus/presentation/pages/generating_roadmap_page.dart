@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+
+import '../../../../app/router/routes.dart';
 import '../provider/syllabus_provider.dart';
 import '../state/syllabus_status.dart';
 
@@ -204,7 +208,9 @@ class _GeneratingRoadmapPageState extends ConsumerState<GeneratingRoadmapPage> {
                         child: PrimaryCTAButton(
                           text: "View My Learning Path",
                           icon: Icons.arrow_forward,
-                          onPressed: () {},
+                          onPressed: () {
+                            context.pushReplacement(Routes.syllabusPage);
+                          },
                         ),
                       ),
                     ),
