@@ -1,3 +1,4 @@
+import 'package:mnemosyne_learn/features/syllabus/domain/entities/learning_goal.dart';
 import 'package:mnemosyne_learn/features/syllabus/domain/entities/syllabus.dart';
 import 'package:mnemosyne_learn/features/syllabus/domain/repositories/syllabus_repository.dart';
 
@@ -10,8 +11,10 @@ class SyllabusRepositoryRemoteImpl implements SyllabusRepository {
   SyllabusRepositoryRemoteImpl(this.remote);
 
   @override
-  Future<Syllabus> generateFromGoal({required String learningGoalId}) async {
-    return await remote.generateFromGoal(goalId: learningGoalId);
+  Future<Syllabus> generateFromGoal({
+    required LearningGoal learningGoal,
+  }) async {
+    return await remote.generateFromGoal(learningGoal: learningGoal);
   }
 
   @override

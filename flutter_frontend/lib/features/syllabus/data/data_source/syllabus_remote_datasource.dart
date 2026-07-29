@@ -1,7 +1,8 @@
+import '../../domain/entities/learning_goal.dart';
 import '../models/syllabus_model.dart';
 
 abstract class SyllabusRemoteDataSource {
-  Future<SyllabusModel> generateFromGoal({required String goalId});
+  Future<SyllabusModel> generateFromGoal({required LearningGoal learningGoal});
 
   Future<SyllabusModel?> getSyllabusById(String id);
 
@@ -12,12 +13,13 @@ abstract class SyllabusRemoteDataSource {
 
 class SyllabusRemoteDataSourceImpl implements SyllabusRemoteDataSource {
   @override
-  Future<SyllabusModel> generateFromGoal({required String goalId}) async {
+  Future<SyllabusModel> generateFromGoal({
+    required LearningGoal learningGoal,
+  }) async {
     // simulate AI generation delay
-
     await Future.delayed(const Duration(seconds: 5));
 
-    return SyllabusModel.dummy(goalId);
+    return SyllabusModel.dummy("dummy_id");
   }
 
   @override
@@ -29,13 +31,11 @@ class SyllabusRemoteDataSourceImpl implements SyllabusRemoteDataSource {
 
   @override
   Future<void> updateSyllabus(SyllabusModel syllabus) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    // pretend API saved
+    throw UnimplementedError("The Syllabus Deletion is not yet implemented");
   }
 
   @override
   Future<void> deleteSyllabus(String id) async {
-    await Future.delayed(const Duration(seconds: 1));
+    throw UnimplementedError("The Syllabus Deletion is not yet implemented");
   }
 }

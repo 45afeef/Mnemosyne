@@ -1,8 +1,10 @@
 import 'package:mnemosyne_learn/features/syllabus/domain/entities/syllabus.dart';
 
+import '../entities/learning_goal.dart';
+
 abstract class SyllabusRepository {
   /// Generate initial syllabus from learning goal
-  Future<Syllabus> generateFromGoal({required String learningGoalId});
+  Future<Syllabus> generateFromGoal({required LearningGoal learningGoal});
 
   /// Load existing syllabus
   Future<Syllabus?> getSyllabusById(String id);

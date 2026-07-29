@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:mnemosyne_learn/features/syllabus/domain/entities/learning_goal.dart';
 import 'package:mnemosyne_learn/features/syllabus/domain/entities/syllabus.dart';
 import 'package:mnemosyne_learn/features/syllabus/domain/repositories/syllabus_repository.dart';
 import 'package:mnemosyne_learn/features/syllabus/presentation/state/syllabus_status.dart';
@@ -13,13 +14,11 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
 
   /// Generate syllabus from goal
 
-  Future<void> generateSyllabus({required String goalId}) async {
+  Future<void> generateSyllabus({required LearningGoal goal}) async {
     state = state.copyWith(status: SyllabusStatus.generating);
 
     try {
-      final syllabus = await repository.generateFromGoal(
-        learningGoalId: goalId,
-      );
+      final syllabus = await repository.generateFromGoal(learningGoal: goal);
 
       state = state.copyWith(syllabus: syllabus, status: SyllabusStatus.ready);
     } catch (e) {

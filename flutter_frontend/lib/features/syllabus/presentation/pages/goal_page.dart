@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mnemosyne_learn/app/router/routes.dart';
-import 'package:mnemosyne_learn/features/syllabus/presentation/pages/generating_roadmap_page.dart';
 
+import '../../../../app/router/routes.dart';
+import '../../domain/entities/learning_goal.dart';
+import '../notifier/goal_notifier.dart';
 import '../../../../app/theme/app_buttons.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
@@ -55,17 +56,18 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
   }
 
   void _saveGoal() {
-    ref.read(goalNotifierProvider.notifier).saveGoal();
+    GoalNotifier goalNotifier = ref.read(goalNotifierProvider.notifier);
 
-    final goal = ref.read(goalNotifierProvider).selectedGoal;
+    if (goalNotifier.validateDraft()) {
+      goalNotifier.saveGoal();
 
-    if (goal == null) return;
+      var state = ref.read(goalNotifierProvider);
+      LearningGoal goal = state.selectedGoal ?? state.draftGoal!;
 
-    ref
-        .read(syllabusNotifierProvider.notifier)
-        .generateSyllabus(goalId: goal.id);
+      ref.read(syllabusNotifierProvider.notifier).generateSyllabus(goal: goal);
 
-    context.push(Routes.generatingRoadmap);
+      context.push(Routes.generatingRoadmap);
+    }
   }
 
   @override
