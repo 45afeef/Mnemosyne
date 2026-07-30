@@ -66,9 +66,14 @@ class SyllabusRepositoryRemoteImpl implements SyllabusRepository {
   Future<void> updateSyllabus(Syllabus syllabus) async {
     final db = await databaseHelper.database;
 
+    final data = {
+      'id': Uuid().v4(),
+      'content': jsonEncode(SyllabusModel.fromEntity(syllabus).toJson()),
+    };
+
     await db.update(
       'syllabuses',
-      SyllabusModel.fromEntity(syllabus).toJson(),
+      data,
       where: 'id = ?',
       whereArgs: [syllabus.id],
     );
