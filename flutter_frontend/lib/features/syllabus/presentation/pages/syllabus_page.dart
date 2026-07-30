@@ -1,74 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:mnemosyne_learn/features/syllabus/domain/entities/learning_item.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../domain/entities/module.dart';
+import '../../domain/entities/subject.dart';
+import '../../domain/entities/learning_item.dart';
+import '../provider/syllabus_provider.dart';
+import '../notifier/syllabus_notifier.dart';
 
-import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/material.dart';
-
-class ReviewSyllabusPage extends StatefulWidget {
+class ReviewSyllabusPage extends ConsumerWidget {
   const ReviewSyllabusPage({super.key});
 
   @override
-  State<ReviewSyllabusPage> createState() => _ReviewSyllabusPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final syllabus = ref.watch(syllabusNotifierProvider).syllabus;
+    final syllabusNotifier = ref.read(syllabusNotifierProvider.notifier);
 
-class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
-  late List<Module> modules;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final emptyLearningItem = LearningItem(
-      id: "id",
-      title: "title",
-      description: "description",
-      order: 0,
-    );
-
-    modules = [
-      Module(
-        id: '',
-        order: 1,
-        name: "Module 1: Fundamentals",
-        learningItems: [
-          emptyLearningItem.copyWith(
-            title: "Foundations of Neural Networks",
-            order: 1,
-          ),
-          emptyLearningItem.copyWith(
-            title: "Activation Functions Deep-Dive",
-            order: 2,
-          ),
-        ],
-      ),
-      Module(
-        id: '',
-        order: 1,
-        name: "Module 2: Advanced Architectures",
-        learningItems: [
-          emptyLearningItem.copyWith(
-            title: "Backpropagation & Chain Rule",
-            order: 1,
-          ),
-          emptyLearningItem.copyWith(
-            title: "CNNs vs RNNs Comparison",
-            order: 2,
-          ),
-        ],
-      ),
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(
@@ -90,11 +42,10 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
           ),
         ),
       ),
-
       body: SafeArea(
         child: Column(
           children: [
-            _buildAppBar(),
+            _buildAppBar(context),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppSpacing.mobileMargin),
@@ -104,8 +55,10 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
                     _buildImportSection(),
 
                     const SizedBox(height: AppSpacing.lg),
-
-                    ...modules.map(_buildModule),
+                    ...syllabus.subjects.map(
+                      (subject) =>
+                          _buildSubject(context, syllabusNotifier, subject),
+                    ),
 
                     const SizedBox(height: AppSpacing.lg),
 
@@ -119,7 +72,9 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
                             borderRadius: BorderRadius.circular(AppRadius.xl),
                           ),
                         ),
-                        onPressed: _addModule,
+                        onPressed: () {
+                          // _addModule(syllabusNotifier, subject
+                        },
                         icon: const Icon(Icons.library_add),
                         label: const Text("Create New Module"),
                       ),
@@ -136,7 +91,7 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.mobileMargin,
@@ -225,7 +180,52 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
     );
   }
 
-  Widget _buildModule(Module module) {
+  Widget _buildSubject(
+    BuildContext context,
+    SyllabusNotifier notifier,
+    Subject subject,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            subject.name,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          ...subject.modules.map(
+            (module) => _buildModule(context, notifier, subject, module),
+          ),
+
+          const SizedBox(height: AppSpacing.md),
+
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: () => _addModule(notifier, subject),
+              icon: const Icon(Icons.library_add),
+              label: const Text("Create New Module"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModule(
+    BuildContext context,
+    SyllabusNotifier notifier,
+    Subject subject,
+    Module module,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: Column(
@@ -235,7 +235,7 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => _editModule(module),
+                  onTap: () => _editModule(context, notifier, subject, module),
                   child: Text(
                     module.name,
                     style: const TextStyle(
@@ -249,9 +249,10 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
 
               IconButton(
                 onPressed: () {
-                  setState(() {
-                    modules.remove(module);
-                  });
+                  notifier.removeModule(
+                    subjectId: subject.id,
+                    moduleId: module.id,
+                  );
                 },
                 icon: const Icon(Icons.delete_outline),
                 color: AppColors.outline,
@@ -267,21 +268,22 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
             buildDefaultDragHandles: false,
             itemCount: module.learningItems.length,
             onReorderItem: (oldIndex, newIndex) {
-              setState(() {
-                if (newIndex > oldIndex) {
-                  newIndex--;
-                }
-
-                final item = module.learningItems.removeAt(oldIndex);
-
-                module.learningItems.insert(newIndex, item);
-              });
+              notifier.reorderTopics(
+                subjectId: subject.id,
+                moduleId: module.id,
+                oldIndex: oldIndex,
+                newIndex: newIndex,
+              );
             },
+
             itemBuilder: (context, index) {
               final topic = module.learningItems[index];
 
               return _buildTopicCard(
-                key: ValueKey(topic),
+                key: ValueKey(topic.id),
+                context: context,
+                syllabusNotifier: notifier,
+                subject: subject,
                 module: module,
                 topic: topic,
                 index: index,
@@ -300,7 +302,7 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(AppRadius.lg),
-              onTap: () => _addTopic(module),
+              onTap: () => _addTopic(notifier, subject, module),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 18),
@@ -331,6 +333,9 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
 
   Widget _buildTopicCard({
     required Key key,
+    required BuildContext context,
+    required SyllabusNotifier syllabusNotifier,
+    required Subject subject,
     required Module module,
     required LearningItem topic,
     required int index,
@@ -361,15 +366,18 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
             IconButton(
               icon: const Icon(Icons.edit),
               color: AppColors.primary,
-              onPressed: () => _editTopic(topic),
+              onPressed: () =>
+                  _editTopic(context, syllabusNotifier, subject, module, topic),
             ),
             IconButton(
               icon: const Icon(Icons.close),
               color: AppColors.outline,
               onPressed: () {
-                setState(() {
-                  module.learningItems.remove(topic);
-                });
+                syllabusNotifier.removeTopic(
+                  subjectId: subject.id,
+                  moduleId: module.id,
+                  topicId: topic.id,
+                );
               },
             ),
           ],
@@ -378,7 +386,13 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
     );
   }
 
-  Future<void> _editTopic(LearningItem topic) async {
+  Future<void> _editTopic(
+    BuildContext context,
+    SyllabusNotifier notifier,
+    Subject subject,
+    Module module,
+    LearningItem topic,
+  ) async {
     final controller = TextEditingController(text: topic.title);
 
     final result = await showDialog<String>(
@@ -413,13 +427,22 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
     );
 
     if (result != null && result.isNotEmpty) {
-      setState(() {
-        topic = topic.copyWith(title: result);
-      });
+      notifier.renameTopic(
+        subjectId: subject.id,
+        moduleId: module.id,
+        topicId: topic.id,
+        title: result,
+      );
     }
   }
 
-  Future<void> _editModule(Module module) async {
+  Future<void> _editModule(
+    BuildContext context,
+    SyllabusNotifier notifier,
+
+    Subject subject,
+    Module module,
+  ) async {
     final controller = TextEditingController(text: module.name);
 
     final result = await showDialog<String>(
@@ -454,29 +477,19 @@ class _ReviewSyllabusPageState extends State<ReviewSyllabusPage> {
     );
 
     if (result != null && result.isNotEmpty) {
-      setState(() {
-        module = module.copyWith(name: result);
-      });
+      notifier.renameModule(
+        subjectId: subject.id,
+        moduleId: module.id,
+        name: result,
+      );
     }
   }
 
-  void _addTopic(Module module) {
-    setState(() {
-      module.learningItems.add(
-        LearningItem(title: "New Topic", id: '', description: '', order: 99),
-      );
-    });
-
-    _editTopic(module.learningItems.last);
+  void _addTopic(SyllabusNotifier notifier, Subject subject, Module module) {
+    notifier.addTopic(subjectId: subject.id, moduleId: module.id);
   }
 
-  void _addModule() {
-    setState(() {
-      modules.add(
-        Module(name: "New Module", learningItems: [], id: '', order: 99),
-      );
-    });
-
-    _editModule(modules.last);
+  void _addModule(SyllabusNotifier notifier, Subject subject) {
+    notifier.addModule(subjectId: subject.id);
   }
 }
