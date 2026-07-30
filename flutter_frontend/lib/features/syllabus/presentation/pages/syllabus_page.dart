@@ -55,10 +55,13 @@ class ReviewSyllabusPage extends ConsumerWidget {
                     _buildImportSection(),
 
                     const SizedBox(height: AppSpacing.lg),
-                    ...syllabus.subjects.map(
-                      (subject) =>
-                          _buildSubject(context, syllabusNotifier, subject),
-                    ),
+                    if (syllabus == null)
+                      Center(child: Text("No Syllabus"))
+                    else
+                      ...syllabus.subjects.map(
+                        (subject) =>
+                            _buildSubject(context, syllabusNotifier, subject),
+                      ),
 
                     const SizedBox(height: AppSpacing.lg),
 

@@ -11,7 +11,7 @@ import '../../features/splash/presentation/pages/splash_page.dart';
 
 class AppRouter {
   static final router = GoRouter(
-    initialLocation: Routes.onboarding,
+    initialLocation: Routes.splash,
 
     routes: [
       GoRoute(
