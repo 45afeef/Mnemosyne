@@ -23,7 +23,7 @@ class _SplashPageState extends State<SplashPage> {
       context.pushReplacement(Routes.onboarding);
     });
 
-    checkLogin();
+    // checkLogin();
   }
 
   @override

@@ -49,7 +49,7 @@ class SplashLogo extends StatelessWidget {
         boxShadow: AppShadows.ambient,
       ),
       clipBehavior: Clip.antiAlias,
-      child: Image.asset("assets/images/logo.png", fit: BoxFit.cover),
+      child: Image.asset("assets/images/logo wordmark.png", fit: BoxFit.cover),
     );
   }
 }

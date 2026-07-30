@@ -17,7 +17,7 @@ class OnboardingLogo extends StatelessWidget {
             boxShadow: AppShadows.ambient,
           ),
           clipBehavior: Clip.antiAlias,
-          child: Image.asset("assets/images/logo.png", fit: BoxFit.contain),
+          child: Image.asset("assets/images/logo wordmark.png", fit: BoxFit.contain),
         )
         .animate()
         .fadeIn(duration: 700.ms)
