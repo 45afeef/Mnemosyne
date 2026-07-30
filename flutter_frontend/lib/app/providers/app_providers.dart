@@ -14,14 +14,10 @@ final learningGoalRepositoryProvider = Provider<LearningGoalRepository>((ref) {
   return LearningGoalRepositoryImpl(ref.watch(databaseHelperProvider));
 });
 
-final syllabusRemoteDataSourceProvider = Provider<SyllabusRemoteDataSource>((
-  ref,
-) {
-  return SyllabusRemoteDataSourceImpl();
-});
 
 final syllabusRepositoryProvider = Provider<SyllabusRepository>((ref) {
   return SyllabusRepositoryRemoteImpl(
-    ref.watch(syllabusRemoteDataSourceProvider),
+    SyllabusRemoteDataSourceImpl(),
+    ref.watch(databaseHelperProvider),
   );
 });

@@ -27,23 +27,23 @@ class DatabaseHelper {
 
       onCreate: (db, version) async {
         await db.execute('''
-
         CREATE TABLE learning_goals(
-
           id TEXT PRIMARY KEY,
-
           name TEXT NOT NULL,
-
           description TEXT,
-
           end_date TEXT,
-
           daily_commitment INTEGER,
-
           created_at TEXT NOT NULL
+        )     
+        ''');
 
+        await db.execute('''
+        CREATE TABLE syllabuses (
+          id TEXT PRIMARY KEY NOT NULL,
+          content TEXT NOT NULL,
+          created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+          updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now'))
         )
-
         ''');
       },
     );

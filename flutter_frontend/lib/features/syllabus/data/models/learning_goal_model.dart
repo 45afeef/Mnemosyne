@@ -1,13 +1,20 @@
 import '../../domain/entities/learning_goal.dart';
 
-class LearningGoalModel extends LearningGoal {
+class LearningGoalModel {
+  final String id;
+  final String name;
+  final String? description;
+  final DateTime? endDate;
+  final Duration? dailyCommitment;
+  final DateTime createdAt;
+
   const LearningGoalModel({
-    required super.id,
-    required super.name,
-    super.description,
-    super.endDate,
-    super.dailyCommitment,
-    required super.createdAt,
+    required this.id,
+    required this.name,
+    this.description,
+    this.endDate,
+    this.dailyCommitment,
+    required this.createdAt,
   });
 
   factory LearningGoalModel.fromMap(Map<String, dynamic> map) {
@@ -32,6 +39,17 @@ class LearningGoalModel extends LearningGoal {
       'daily_commitment': dailyCommitment?.inMinutes,
       'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  LearningGoal toEntity() {
+    return LearningGoal(
+      id: id,
+      name: name,
+      description: description,
+      endDate: endDate,
+      dailyCommitment: dailyCommitment,
+      createdAt: createdAt,
+    );
   }
 
   factory LearningGoalModel.fromEntity(LearningGoal entity) {

@@ -26,14 +26,14 @@ class LearningGoalRepositoryImpl implements LearningGoalRepository {
 
     await db.insert('learning_goals', model.toMap());
 
-    return model;
+    return model.toEntity();
   }
 
   @override
   Future<List<LearningGoal>> getGoals() async {
     final db = await databaseHelper.database;
     final result = await db.query('learning_goals', orderBy: 'created_at DESC');
-    return result.map((e) => LearningGoalModel.fromMap(e)).toList();
+    return result.map((e) => LearningGoalModel.fromMap(e).toEntity()).toList();
   }
 
   @override
@@ -50,7 +50,8 @@ class LearningGoalRepositoryImpl implements LearningGoalRepository {
       return null;
     }
 
-    return LearningGoalModel.fromMap(result.first);
+    final model = LearningGoalModel.fromMap(result.first);
+    return model.toEntity();
   }
 
   @override

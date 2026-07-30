@@ -34,7 +34,6 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
   }
 
   /// Load saved syllabus
-
   Future<void> loadSyllabus(String id) async {
     state = state.copyWith(status: SyllabusStatus.loading);
 
@@ -52,13 +51,11 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
   }
 
   /// Update whole syllabus tree
-
   void updateSyllabus(Syllabus syllabus) {
     state = state.copyWith(syllabus: syllabus);
   }
 
   /// Save user changes
-
   Future<void> saveChanges() async {
     final syllabus = state.syllabus;
 
@@ -75,14 +72,12 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
     } catch (e) {
       state = state.copyWith(
         status: SyllabusStatus.error,
-
         errorMessage: e.toString(),
       );
     }
   }
 
   /// Replace syllabus after editing
-
   void replaceSubject(Subject updatedSubject) {
     final syllabus = state.syllabus;
 
@@ -102,7 +97,6 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
   }
 
   /// Add new subject
-
   void addSubject(Subject subject) {
     final syllabus = state.syllabus;
 
@@ -115,7 +109,7 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
     );
   }
 
-  /// Renmae a Module
+  /// Rename a Module
   void renameModule({
     required String subjectId,
     required String moduleId,
@@ -268,6 +262,7 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
     state = state.copyWith(syllabus: syllabus.copyWith(subjects: subjects));
   }
 
+  /// ReOrder Topics
   void reorderTopics({
     required String subjectId,
     required String moduleId,

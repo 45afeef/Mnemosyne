@@ -1,40 +1,68 @@
+import 'dart:convert';
+
 import 'package:mnemosyne_learn/features/syllabus/domain/entities/learning_goal.dart';
 import 'package:mnemosyne_learn/features/syllabus/domain/entities/syllabus.dart';
 import 'package:mnemosyne_learn/features/syllabus/domain/repositories/syllabus_repository.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../../app/database_helper.dart';
 import '../data_source/syllabus_remote_datasource.dart';
 import '../models/syllabus_model.dart';
 
 class SyllabusRepositoryRemoteImpl implements SyllabusRepository {
   final SyllabusRemoteDataSource remote;
+  final DatabaseHelper databaseHelper;
 
-  SyllabusRepositoryRemoteImpl(this.remote);
+  SyllabusRepositoryRemoteImpl(this.remote, this.databaseHelper);
 
   @override
   Future<Syllabus> generateFromGoal({
     required LearningGoal learningGoal,
   }) async {
-    return await remote.generateFromGoal(learningGoal: learningGoal);
+    final model = await remote.generateFromGoal(learningGoal: learningGoal);
+
+    // Save the syllabus before returning back
+    final db = await databaseHelper.database;
+    final data = {'id': Uuid().v4(), 'content': jsonEncode(model.toJson())};
+
+    await db.insert('syllabuses', data);
+
+    return model.toEntity();
   }
 
   @override
   Future<Syllabus?> getSyllabusById(String id) async {
-    return await remote.getSyllabusById(id);
+    final db = await databaseHelper.database;
+
+    final result = await db.query(
+      'syllabuses',
+      columns: ['content'],
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isEmpty) {
+      return null;
+    }
+
+    final json =
+        jsonDecode(result.first['content'] as String) as Map<String, dynamic>;
+
+    final model = SyllabusModel.fromJson(json);
+    return model.toEntity();
   }
 
   @override
   Future<void> updateSyllabus(Syllabus syllabus) async {
-    final model = SyllabusModel(
-      id: syllabus.id,
+    final db = await databaseHelper.database;
 
-      title: syllabus.title,
-
-      description: syllabus.description,
-
-      subjects: syllabus.subjects,
+    await db.update(
+      'syllabuses',
+      SyllabusModel.fromEntity(syllabus).toJson(),
+      where: 'id = ?',
+      whereArgs: [syllabus.id],
     );
-
-    await remote.updateSyllabus(model);
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mnemosyne_learn/app/router/routes.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
@@ -35,7 +37,11 @@ class ReviewSyllabusPage extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(AppRadius.lg),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                syllabusNotifier.saveChanges();
+
+                context.go(Routes.home);
+              },
               icon: const Icon(Icons.rocket_launch),
               label: const Text("START LEARNING"),
             ),
@@ -62,26 +68,6 @@ class ReviewSyllabusPage extends ConsumerWidget {
                         (subject) =>
                             _buildSubject(context, syllabusNotifier, subject),
                       ),
-
-                    const SizedBox(height: AppSpacing.lg),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.surfaceHigh,
-                          foregroundColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppRadius.xl),
-                          ),
-                        ),
-                        onPressed: () {
-                          // _addModule(syllabusNotifier, subject
-                        },
-                        icon: const Icon(Icons.library_add),
-                        label: const Text("Create New Module"),
-                      ),
-                    ),
 
                     const SizedBox(height: 120),
                   ],
