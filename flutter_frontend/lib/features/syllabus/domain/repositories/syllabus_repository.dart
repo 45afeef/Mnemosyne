@@ -9,6 +9,9 @@ abstract class SyllabusRepository {
   /// Load existing syllabus
   Future<Syllabus?> getSyllabusById(String id);
 
+  /// Check whether any syllabus exists in the local database
+  Future<bool> hasSavedSyllabus();
+
   /// Save user modifications
   Future<void> updateSyllabus(Syllabus syllabus);
 

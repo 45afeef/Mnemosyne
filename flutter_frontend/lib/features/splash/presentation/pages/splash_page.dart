@@ -1,29 +1,27 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mnemosyne_learn/app/providers/app_providers.dart';
 import 'package:mnemosyne_learn/app/router/routes.dart';
 
 import '../widgets/splash_background.dart';
 import '../widgets/splash_content.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () {
-      context.pushReplacement(Routes.onboarding);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _checkSavedSyllabus();
     });
-
-    // checkLogin();
   }
 
   @override
@@ -39,13 +37,12 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 
-  Future<void> checkLogin() async {
-    await Future.delayed(const Duration(seconds: 2));
-
-    bool isLoggedIn = true; // Replace with your auth logic
+  Future<void> _checkSavedSyllabus() async {
+    final repository = ref.read(syllabusRepositoryProvider);
+    final hasSavedSyllabus = await repository.hasSavedSyllabus();
 
     if (!mounted) return;
 
-    context.push(Routes.home);
+    context.pushReplacement(hasSavedSyllabus ? Routes.home : Routes.onboarding);
   }
 }

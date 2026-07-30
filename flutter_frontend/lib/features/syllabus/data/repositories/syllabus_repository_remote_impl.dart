@@ -54,6 +54,15 @@ class SyllabusRepositoryRemoteImpl implements SyllabusRepository {
   }
 
   @override
+  Future<bool> hasSavedSyllabus() async {
+    final db = await databaseHelper.database;
+
+    final result = await db.query('syllabuses', columns: ['id'], limit: 1);
+
+    return result.isNotEmpty;
+  }
+
+  @override
   Future<void> updateSyllabus(Syllabus syllabus) async {
     final db = await databaseHelper.database;
 
