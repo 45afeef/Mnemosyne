@@ -8,4 +8,7 @@ class Routes {
   static const goalSettingPage = "/set-goal";
   static const generatingRoadmap = "/generating-roadmap";
   static const syllabusPage = "/review-syllabus";
+
+  // Lesson Session
+  static const learnEntry = "/choose-entry";
 }

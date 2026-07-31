@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 
@@ -13,7 +15,9 @@ class CurrentTopicCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(AppRadius.lg),
-      onTap: () {},
+      onTap: () {
+        context.push(Routes.learnEntry);
+      },
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(

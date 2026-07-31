@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'routes.dart';
 import '../../features/syllabus/presentation/pages/generating_roadmap_page.dart';
 import '../../features/syllabus/presentation/pages/syllabus_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/syllabus/presentation/pages/goal_page.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/lesson/presentation/pages/learning_entry_page.dart';
+import 'routes.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -37,6 +38,11 @@ class AppRouter {
         path: Routes.syllabusPage,
         builder: (_, _) => const ReviewSyllabusPage(),
       ),
+      GoRoute(
+        path: Routes.learnEntry,
+        builder: (_, _) => const LearnPathPage(),
+      ),
+      
     ],
 
     errorBuilder: (_, _) {

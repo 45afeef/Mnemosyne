@@ -9,32 +9,32 @@ class ProgressRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 160,
-      height: 160,
-
-      child: Stack(
-        alignment: Alignment.center,
-
-        children: [
-          CircularProgressIndicator(
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 160,
+          height: 160,
+          child: CircularProgressIndicator(
             value: progress,
-            strokeWidth: 10,
             color: AppColors.primaryContainer,
             backgroundColor: AppColors.outlineVariant,
           ),
+        ),
 
-          Column(
-            mainAxisSize: MainAxisSize.min,
-
-            children: [
-              Text("22", style: Theme.of(context).textTheme.headlineMedium),
-
-              Text("/30 min"),
-            ],
-          ),
-        ],
-      ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "22",
+              style: Theme.of(
+                context,
+              ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Text("/30 min", style: Theme.of(context).textTheme.titleMedium),
+          ],
+        ),
+      ],
     );
   }
 }
