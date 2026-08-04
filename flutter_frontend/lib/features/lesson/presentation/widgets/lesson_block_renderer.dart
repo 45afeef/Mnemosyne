@@ -100,7 +100,7 @@ class _Quote extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border(left: BorderSide(color: AppColors.secondary, width: 4)),
+        border: Border(left: BorderSide(color: AppColors.primary, width: 4)),
       ),
       child: MarkdownBody(
         selectable: true,

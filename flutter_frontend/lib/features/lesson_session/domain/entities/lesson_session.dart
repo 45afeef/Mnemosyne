@@ -1,13 +1,15 @@
-import 'package:mnemosyne_learn/features/lesson_session/domain/entities/learning_session_item.dart';
+import 'topic.dart';
 
 class LessonSession {
-  final String id;
-  final String topicName;
-  final List<LessonItem> learningItems;
-
   const LessonSession({
     required this.id,
-    required this.topicName,
-    required this.learningItems,
+    required this.title,
+    required this.topics,
   });
+
+  final String id;
+
+  final String title;
+
+  final List<Topic> topics;
 }

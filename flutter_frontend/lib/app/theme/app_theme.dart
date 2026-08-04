@@ -8,38 +8,54 @@ class AppTheme {
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
 
-      brightness: Brightness.dark,
+      colorScheme: const ColorScheme.light(
+        primary: LightPalette.primary,
+        primaryContainer: LightPalette.primaryContainer,
 
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
-        secondary: AppColors.secondary,
-        tertiary: AppColors.tertiary,
+        secondary: LightPalette.secondary,
+        tertiary: LightPalette.tertiary,
 
-        surface: AppColors.surface,
-        surfaceContainer: AppColors.surfaceContainer,
+        surface: LightPalette.surface,
+        surfaceContainer: LightPalette.surfaceContainer,
 
-        onSurface: AppColors.onSurface,
-        onPrimary: Color(0xFF1000A9),
+        onSurface: LightPalette.onSurface,
+        onPrimary: Colors.white,
 
-        error: AppColors.error,
+        error: LightPalette.error,
       ),
 
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: LightPalette.background,
 
       textTheme: AppTextTheme.textTheme,
-
-      extensions: const [
-        LearningColors(
-          activeRecall: Color(0xFF6366F1),
-          spacedRepetition: Color(0xFF4338CA),
-          interleavedPractice: Color(0xFF64748B),
-        ),
-      ],
     );
   }
 
   static ThemeData get dark {
-    return ThemeData.dark(useMaterial3: true);
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+
+      colorScheme: const ColorScheme.dark(
+        primary: DarkPalette.primary,
+        primaryContainer: DarkPalette.primaryContainer,
+
+        secondary: DarkPalette.secondary,
+        tertiary: DarkPalette.tertiary,
+
+        surface: DarkPalette.surface,
+        surfaceContainer: DarkPalette.surfaceContainer,
+
+        onSurface: DarkPalette.onSurface,
+        onPrimary: Color(0xFF1000A9),
+
+        error: DarkPalette.error,
+      ),
+
+      scaffoldBackgroundColor: DarkPalette.background,
+
+      textTheme: AppTextTheme.textTheme,
+    );
   }
 }

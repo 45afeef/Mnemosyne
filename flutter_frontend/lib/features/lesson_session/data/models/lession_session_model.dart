@@ -1,7 +1,7 @@
 import '../../domain/entities/learning_session_item.dart';
-import '../../domain/entities/lesson_session.dart';
+import '../../domain/entities/lesson_session_old.dart';
 
-class LessionSessionModel extends LessonSession {
+class LessionSessionModel extends LessonSessionOld {
   LessionSessionModel({
     super.id = "",
     required super.topicName,

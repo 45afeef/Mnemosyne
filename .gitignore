@@ -1,1 +1,6 @@
 .env
+
+ai-proxy-backend/app/ai generate lesson session 2.json
+ai-proxy-backend/tests/test_recursive_schema.py
+ai-proxy-backend/app/ai generated syllabus.json
+ai-proxy-backend/app/ai generate lesson session.json

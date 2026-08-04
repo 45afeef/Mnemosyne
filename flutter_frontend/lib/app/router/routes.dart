@@ -11,4 +11,5 @@ class Routes {
 
   // Lesson Session
   static const learnEntry = "/choose-entry";
+  static const lessonSession = "/lesson-session";
 }
