@@ -1,16 +1,16 @@
-import '../entities/lesson_session_old.dart';
+import '../entities/lesson_session.dart';
 
 abstract class LessonSessionRepository {
   /// Generate lesson from selected learning items
-  Future<LessonSessionOld> generateSession({
+  Future<LessonSession> generateSession({
     required List<String> learningItemIds,
   });
 
   /// Get previous generated lessons
-  Future<List<LessonSessionOld>> getSessions();
+  Future<List<LessonSession>> getSessions();
 
   /// Get one lesson
-  Future<LessonSessionOld?> getSessionById(String id);
+  Future<LessonSession?> getSessionById(String id);
 
   /// Mark lesson completed
   Future<void> completeSession(String id);

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../../domain/entities/session_result.dart';
 import '../../domain/entities/step_result.dart';
 import '../../domain/services/session_engine.dart';
 import '../../domain/services/session_feedback_service.dart';
