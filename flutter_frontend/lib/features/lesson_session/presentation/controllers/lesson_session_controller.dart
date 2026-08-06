@@ -44,4 +44,9 @@ class LessonSessionController extends StateNotifier<LessonSessionState> {
 
     state = LessonSessionCompleted(feedback: feedback);
   }
+
+  void reset() {
+    engine.reset();
+    state = const LessonSessionLoading();
+  }
 }

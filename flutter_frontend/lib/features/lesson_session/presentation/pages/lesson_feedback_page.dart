@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mnemosyne_learn/app/theme/app_buttons.dart';
+import 'package:mnemosyne_learn/features/lesson_session/presentation/providers/lesson_session_provider.dart';
 
 import '../../domain/entities/session_feedback.dart';
 import '../widgets/feedback/score_card.dart';
 
-class LessonFeedbackPage extends StatelessWidget {
+class LessonFeedbackPage extends ConsumerWidget {
   const LessonFeedbackPage({super.key, required this.feedback});
 
   final SessionFeedback feedback;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -33,6 +37,14 @@ class LessonFeedbackPage extends StatelessWidget {
                 title: Text(tip.title),
                 subtitle: Text(tip.description),
               ),
+            ),
+
+            PrimaryCTAButton(
+              text: "Close",
+              onPressed: () {
+                ref.read(lessonSessionControllerProvider.notifier).reset();
+                context.pop();
+              },
             ),
           ],
         ),

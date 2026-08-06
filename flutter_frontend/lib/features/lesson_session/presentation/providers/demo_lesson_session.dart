@@ -44,8 +44,17 @@ from a single codebase.
             explanation: 'Flutter is a UI toolkit by Google.',
           ),
         ),
+        FlashcardStep(
+          id: 'flashcard_1',
+          title: 'Remember',
+          flashcard: Flashcard(
+            id: 'card_1',
+            front: 'Flutter',
+            back: 'A framework for building cross-platform apps.',
+          ),
+        ),
         McqStep(
-          id: 'mcq_1',
+          id: 'mcq_2',
           title: 'Quick Check',
           mcq: Mcq(
             id: 'mcq_1',
@@ -60,7 +69,7 @@ from a single codebase.
           ),
         ),
         FlashcardStep(
-          id: 'flashcard_1',
+          id: 'flashcard_2',
           title: 'Remember',
           flashcard: Flashcard(
             id: 'card_1',

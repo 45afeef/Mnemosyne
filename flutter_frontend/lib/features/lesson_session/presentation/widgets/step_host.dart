@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mnemosyne_learn/features/lesson_session/domain/entities/session_step.dart';
 import 'package:mnemosyne_learn/features/lesson_session/presentation/controllers/lesson_session_state.dart';
-import 'package:provider/provider.dart';
 
 import '../../../assessment/presentation/pages/assessment_page.dart';
 import '../../../learning/presentation/pages/learning_page.dart';
-import '../controllers/lesson_session_controller.dart';
 import '../providers/lesson_session_provider.dart';
 
 class StepHost extends ConsumerWidget {

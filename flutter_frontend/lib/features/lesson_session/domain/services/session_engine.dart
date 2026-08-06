@@ -20,9 +20,14 @@ class SessionEngine {
 
   List<StepResult> get results => List.unmodifiable(_results);
 
-  bool get isFinished =>
-      _currentTopicIndex == session.topics.length - 1 &&
-      _currentStepIndex == currentTopic.steps.length - 1;
+  bool get isFinished {
+    final totalSteps = session.topics.fold<int>(
+      0,
+      (sum, topic) => sum + topic.steps.length,
+    );
+
+    return _results.length >= totalSteps;
+  }
 
   double get progress {
     final total = session.topics.fold<int>(
@@ -55,5 +60,11 @@ class SessionEngine {
       stepResults: results,
       completedAt: DateTime.now(),
     );
+  }
+
+  void reset() {
+    _currentTopicIndex = 0;
+    _currentStepIndex = 0;
+    _results.clear();
   }
 }

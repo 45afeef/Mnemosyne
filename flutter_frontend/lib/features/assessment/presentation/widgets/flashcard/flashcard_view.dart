@@ -37,9 +37,21 @@ class FlashcardView extends ConsumerWidget {
       children: [
         GestureDetector(
           onTap: controller.flip,
-          child: state.isFlipped
-              ? FlashcardBack(text: step.flashcard.back)
-              : FlashcardFront(text: step.flashcard.front),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            transitionBuilder: (child, animation) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            child: state.isFlipped
+                ? FlashcardBack(
+                    key: const ValueKey('back'),
+                    text: step.flashcard.back,
+                  )
+                : FlashcardFront(
+                    key: const ValueKey('front'),
+                    text: step.flashcard.front,
+                  ),
+          ),
         ),
 
         const SizedBox(height: 24),

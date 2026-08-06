@@ -5,6 +5,6 @@ import '../controllers/mcq_controller.dart';
 import '../controllers/mcq_state.dart';
 
 final mcqControllerProvider =
-    StateNotifierProvider.family<McqController, McqState, Mcq>((ref, mcq) {
+    StateNotifierProvider.family.autoDispose<McqController, McqState, Mcq>((ref, mcq) {
       return McqController(mcq: mcq);
     });

@@ -4,6 +4,8 @@ import '../controllers/flashcard_controller.dart';
 import '../controllers/flashcard_state.dart';
 
 final flashcardControllerProvider =
-    StateNotifierProvider<FlashcardController, FlashcardState>((ref) {
+    StateNotifierProvider.autoDispose<FlashcardController, FlashcardState>((
+      ref,
+    ) {
       return FlashcardController();
     });
