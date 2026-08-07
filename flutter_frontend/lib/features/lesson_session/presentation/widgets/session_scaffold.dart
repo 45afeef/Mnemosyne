@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'session_bottom_bar.dart';
 import 'step_host.dart';
 
 class SessionScaffold extends StatelessWidget {
@@ -8,9 +7,6 @@ class SessionScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: const StepHost()),
-      bottomNavigationBar: const SessionBottomBar(),
-    );
+    return Scaffold(body: SafeArea(child: const StepHost()));
   }
 }

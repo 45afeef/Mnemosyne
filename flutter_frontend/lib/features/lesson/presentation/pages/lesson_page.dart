@@ -6,7 +6,6 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../models/lesson_block.dart';
 import '../widgets/assistant_chip_bar.dart';
-import '../widgets/lesson_app_bar.dart';
 import '../widgets/lesson_bottom_action.dart';
 import '../widgets/lesson_content.dart';
 import '../widgets/lesson_progress.dart';

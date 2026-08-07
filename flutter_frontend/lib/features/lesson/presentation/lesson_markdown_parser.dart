@@ -5,7 +5,7 @@ import 'models/lesson_block.dart';
 class LessonMarkdownParser {
   const LessonMarkdownParser();
 
-  List<LessonBlock> parse(String markdown) {
+  static List<LessonBlock> parse(String markdown) {
     final lines = markdown.split('\n');
 
     final List<LessonBlock> blocks = [];
@@ -120,7 +120,7 @@ class LessonMarkdownParser {
     return blocks;
   }
 
-  void _flushParagraph(StringBuffer buffer, List<LessonBlock> blocks) {
+  static void _flushParagraph(StringBuffer buffer, List<LessonBlock> blocks) {
     final text = buffer.toString().trim();
 
     if (text.isEmpty) {
@@ -133,7 +133,7 @@ class LessonMarkdownParser {
     buffer.clear();
   }
 
-  bool _isListItem(String line) {
+  static bool _isListItem(String line) {
     return RegExp(r'^[-*+]\s+').hasMatch(line);
   }
 }

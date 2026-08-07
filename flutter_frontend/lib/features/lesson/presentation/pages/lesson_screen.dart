@@ -1,74 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mnemosyne_learn/features/lesson/presentation/lesson_markdown_parser.dart';
+import 'package:mnemosyne_learn/features/lesson/presentation/models/lesson_block.dart';
 import '../../../../app/theme/app_buttons.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_text_theme.dart';
-import '../lesson_view_model.dart';
-import '../../domain/entities/lesson.dart';
+import '../../../lesson_session/domain/entities/session_step.dart';
+import '../../../lesson_session/domain/entities/step_result.dart';
+import '../../../lesson_session/presentation/providers/lesson_session_provider.dart';
 import '../pages/lesson_page.dart';
 import '../widgets/assistant_chip_bar.dart';
 
-class LessonScreen extends StatefulWidget {
-  const LessonScreen({
-    super.key,
-    required this.lessonId,
-    required this.viewModel,
-  });
-  final String lessonId;
-  final LessonViewModel viewModel;
-  @override
-  State<LessonScreen> createState() => _LessonScreenState();
-}
+class LessonScreen extends ConsumerWidget {
+  const LessonScreen({super.key, required this.step});
 
-class _LessonScreenState extends State<LessonScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.viewModel.loadLesson(widget.lessonId);
-    });
-  }
+  final LearningStep step;
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: widget.viewModel,
-      child: Consumer<LessonViewModel>(
-        builder: (context, viewModel, _) {
-          switch (viewModel.state) {
-            case LessonLoadState.loading:
-            case LessonLoadState.idle:
-              return const LessonLoadingView();
-            case LessonLoadState.error:
-            //afeef
-              return LessonErrorView(
-                message: viewModel.errorMessage ?? "Something went wrong",
-              );
-            case LessonLoadState.loaded:
-              final Lesson lesson = viewModel.lesson!;
-              return LessonPage(
-                title: lesson.title,
-                progress: lesson.progress,
-                blocks: lesson.blocks,
-                assistantActions: lesson.assistantActions
-                    .map(
-                      (item) => AssistantAction(
-                        label: item.label,
-                        onTap: () {
-                          // Connect AI assistant here
-                        },
-                      ),
-                    )
-                    .toList(),
-                onNext: () {
-                  // Navigate to next concept
-                },
-              );
-          }
-        },
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    late List<LessonBlock> blocks = LessonMarkdownParser.parse(
+      step.content.markdown,
+    );
+
+    return LessonPage(
+      title: step.title,
+      progress: 0.4,
+      blocks: blocks,
+      assistantActions: step.content.title
+          .split("")
+          .toList()
+          .map(
+            (item) => AssistantAction(
+              label: item, //.label,
+              onTap: () {
+                // Connect AI assistant here
+              },
+            ),
+          )
+          .toList(),
+      onNext: () {
+        ref
+            .read(lessonSessionControllerProvider.notifier)
+            .completeStep(LearningStepCompleted(stepId: step.id));
+      },
     );
   }
 }

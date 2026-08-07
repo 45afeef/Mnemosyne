@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../app/router/routes.dart';
 import '../../../app/theme/app_buttons.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
-import '../../lesson/presentation/pages/debug_lesson_page.dart';
 import 'widgets/bottom_navigation.dart';
 import 'widgets/current_topic_card.dart';
 import 'widgets/daily_goal_card.dart';
@@ -32,14 +33,7 @@ class HomePage extends StatelessWidget {
           text: "Continue",
           icon: Icons.play_arrow,
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (context) => const DebugLessonPage(),
-              ),
-            );
-
-            // context.push(Routes.learnEntry);
+            context.push(Routes.learnEntry);
           },
         ),
       ),

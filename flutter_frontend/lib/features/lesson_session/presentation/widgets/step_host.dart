@@ -4,7 +4,7 @@ import 'package:mnemosyne_learn/features/lesson_session/domain/entities/session_
 import 'package:mnemosyne_learn/features/lesson_session/presentation/controllers/lesson_session_state.dart';
 
 import '../../../assessment/presentation/pages/assessment_page.dart';
-import '../../../learning/presentation/pages/learning_page.dart';
+import '../../../lesson/presentation/pages/lesson_screen.dart';
 import '../providers/lesson_session_provider.dart';
 
 class StepHost extends ConsumerWidget {
@@ -21,7 +21,7 @@ class StepHost extends ConsumerWidget {
     final step = state.currentStep;
 
     return switch (step) {
-      LearningStep() => LearningPage(key: ValueKey(step.id), step: step),
+      LearningStep() => LessonScreen(key: ValueKey(step.id), step: step),
 
       McqStep() => AssessmentPage(key: ValueKey(step.id), step: step),
 

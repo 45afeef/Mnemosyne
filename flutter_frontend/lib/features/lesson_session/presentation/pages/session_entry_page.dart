@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/routes.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
-import '../../../lesson/presentation/widgets/entry_card.dart';
+import '../widgets/entry_card.dart';
 
 class SessionEnrtyPage extends StatefulWidget {
   const SessionEnrtyPage({super.key});
