@@ -76,6 +76,7 @@ class _LessonContentState extends State<LessonContent> {
   Widget build(BuildContext context) {
     return AnimatedList(
       key: _listKey,
+      padding: EdgeInsets.only(bottom: 150),
       controller: _scrollController,
       physics: const BouncingScrollPhysics(),
       initialItemCount: _insertedItems,

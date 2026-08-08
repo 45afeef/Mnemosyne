@@ -61,9 +61,8 @@ class _Paragraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: MarkdownBody(
-        selectable: true,
-        data: block.markdown,
+      child: TypingMarkdown(
+        markdown: block.markdown,
         styleSheet: MarkdownStyleSheet(
           p: AppTextTheme.textTheme.bodyLarge!.copyWith(
             color: AppColors.onSurfaceVariant,
@@ -102,9 +101,8 @@ class _Quote extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border(left: BorderSide(color: AppColors.primary, width: 4)),
       ),
-      child: MarkdownBody(
-        selectable: true,
-        data: block.markdown,
+      child: TypingMarkdown(
+        markdown: block.markdown,
         styleSheet: MarkdownStyleSheet(
           p: AppTextTheme.textTheme.bodyMedium!.copyWith(
             color: AppColors.onSurface,
@@ -139,9 +137,8 @@ class _List extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
-                  child: MarkdownBody(
-                    data: block.items[index],
-                    selectable: true,
+                  child: TypingMarkdown(
+                    markdown: block.items[index],
                     styleSheet: MarkdownStyleSheet(
                       p: AppTextTheme.textTheme.bodyLarge!.copyWith(
                         color: AppColors.onSurfaceVariant,
@@ -261,15 +258,62 @@ class _Callout extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: color),
       ),
-      child: MarkdownBody(
-        selectable: true,
-        data: block.markdown,
+      child: TypingMarkdown(
+        markdown: block.markdown,
         styleSheet: MarkdownStyleSheet(
           p: AppTextTheme.textTheme.bodyMedium!.copyWith(
             color: AppColors.onSurface,
           ),
         ),
       ),
+    );
+  }
+}
+
+class TypingMarkdown extends StatefulWidget {
+  const TypingMarkdown({super.key, required this.markdown, this.styleSheet});
+
+  final String markdown;
+  final MarkdownStyleSheet? styleSheet;
+
+  @override
+  State<TypingMarkdown> createState() => _TypingMarkdownState();
+}
+
+class _TypingMarkdownState extends State<TypingMarkdown>
+    with AutomaticKeepAliveClientMixin {
+  int visibleWords = 0;
+  late final List<String> words;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    words = widget.markdown.split(' ');
+    _animate();
+  }
+
+  Future<void> _animate() async {
+    while (visibleWords < words.length) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (!mounted) return;
+
+      setState(() {
+        visibleWords++;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return MarkdownBody(
+      data: words.take(visibleWords).join(' '),
+      selectable: true,
+      styleSheet: widget.styleSheet,
     );
   }
 }

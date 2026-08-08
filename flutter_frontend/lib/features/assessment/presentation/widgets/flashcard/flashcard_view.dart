@@ -34,6 +34,8 @@ class FlashcardView extends ConsumerWidget {
     final controller = ref.read(flashcardControllerProvider.notifier);
 
     return Column(
+      crossAxisAlignment: .center,
+      mainAxisAlignment: .center,
       children: [
         GestureDetector(
           onTap: controller.flip,
