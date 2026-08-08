@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mnemosyne_learn/app/router/routes.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../providers/lesson_session_provider.dart';
 import '../widgets/particle_widget.dart';
 
-class TopicCompletionPage extends StatelessWidget {
+class TopicCompletionPage extends ConsumerWidget {
   const TopicCompletionPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -36,7 +38,7 @@ class TopicCompletionPage extends StatelessWidget {
                         constraints: const BoxConstraints(
                           maxWidth: AppSpacing.maxContentWidth,
                         ),
-                        child: _buildContent(context),
+                        child: _buildContent(context, ref),
                       ),
                     ),
                   ),
@@ -86,7 +88,7 @@ class TopicCompletionPage extends StatelessWidget {
   // Main content
   // ---------------------------------------------------------------------------
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         _buildSuccessHeader(),
@@ -97,7 +99,7 @@ class TopicCompletionPage extends StatelessWidget {
 
         const SizedBox(height: AppSpacing.lg),
 
-        _buildActions(context),
+        _buildActions(context, ref),
       ],
     );
   }
@@ -406,7 +408,7 @@ class TopicCompletionPage extends StatelessWidget {
   // Actions
   // ---------------------------------------------------------------------------
 
-  Widget _buildActions(BuildContext context) {
+  Widget _buildActions(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         SizedBox(
@@ -414,7 +416,7 @@ class TopicCompletionPage extends StatelessWidget {
           height: 56,
           child: FilledButton(
             onPressed: () {
-              // ref.read(lessonSessionControllerProvider.notifier).reset();
+              ref.read(lessonSessionControllerProvider.notifier).reset();
               context.pop();
             },
             style: FilledButton.styleFrom(
@@ -446,6 +448,7 @@ class TopicCompletionPage extends StatelessWidget {
 
         TextButton(
           onPressed: () {
+            ref.read(lessonSessionControllerProvider.notifier).reset();
             context.go(Routes.home);
           },
           style: TextButton.styleFrom(
