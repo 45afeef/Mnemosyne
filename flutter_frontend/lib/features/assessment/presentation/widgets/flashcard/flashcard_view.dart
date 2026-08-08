@@ -92,14 +92,14 @@ class _Flashcard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 350),
           switchInCurve: Curves.easeOutCubic,
           switchOutCurve: Curves.easeInCubic,
           transitionBuilder: (child, animation) {
             return FadeTransition(
               opacity: animation,
               child: ScaleTransition(
-                scale: Tween<double>(begin: 0.97, end: 1).animate(animation),
+                scale: Tween<double>(begin: 0.98, end: 1).animate(animation),
                 child: child,
               ),
             );
@@ -131,78 +131,103 @@ class _FlashcardSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      constraints: const BoxConstraints(minHeight: 320, maxWidth: 680),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isFlipped
-              ? AppColors.secondary.withValues(alpha: 0.45)
-              : AppColors.outlineVariant,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.16),
-            blurRadius: 30,
-            offset: const Offset(0, 14),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Subtle accent glow.
-          Positioned(
-            top: -70,
-            right: -70,
-            child: IgnorePointer(
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: (isFlipped ? AppColors.secondary : AppColors.primary)
-                      .withValues(alpha: 0.06),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = MediaQuery.sizeOf(context).width;
+
+        // Responsive card height.
+        //
+        // Mobile:
+        //   360 - 440px depending on screen width
+        //
+        // Larger screens:
+        //   capped at 480px
+        final cardHeight = screenWidth < 600
+            ? (screenWidth * 0.95).clamp(340.0, 440.0)
+            : 440.0;
+
+        return SizedBox(
+          width: double.infinity,
+          height: cardHeight,
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainer,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isFlipped
+                    ? AppColors.secondary.withValues(alpha: 0.40)
+                    : AppColors.outlineVariant,
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.14),
+                  blurRadius: 28,
+                  offset: const Offset(0, 14),
                 ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  _buildAmbientGlow(),
+
+                  Padding(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _CardLabel(isFlipped: isFlipped),
+
+                        const Spacer(),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                          ),
+                          child: Text(
+                            text,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppColors.onSurface,
+                              fontSize: 24,
+                              height: 1.4,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ),
+
+                        const Spacer(),
+
+                        _FlipIndicator(isFlipped: isFlipped),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+        );
+      },
+    );
+  }
 
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _CardLabel(isFlipped: isFlipped),
-
-                const SizedBox(height: 48),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                  ),
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: AppColors.onSurface,
-                      fontSize: 22,
-                      height: 1.45,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 48),
-
-                _FlipIndicator(isFlipped: isFlipped),
-              ],
-            ),
+  Widget _buildAmbientGlow() {
+    return Positioned(
+      top: -100,
+      right: -80,
+      child: IgnorePointer(
+        child: Container(
+          width: 220,
+          height: 220,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: (isFlipped ? AppColors.secondary : AppColors.primary)
+                .withValues(alpha: 0.055),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -224,19 +249,29 @@ class _CardLabel extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          isFlipped ? Icons.lightbulb_outline : Icons.style_outlined,
-          size: 17,
-          color: color,
+        Container(
+          width: 28,
+          height: 28,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.10),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            isFlipped ? Icons.lightbulb_outline : Icons.style_outlined,
+            color: color,
+            size: 15,
+          ),
         ),
-        const SizedBox(width: AppSpacing.xs),
+
+        const SizedBox(width: AppSpacing.sm),
+
         Text(
           isFlipped ? 'ANSWER' : 'FLASHCARD',
           style: TextStyle(
             color: color,
             fontSize: 11,
             fontWeight: FontWeight.w800,
-            letterSpacing: 1.2,
+            letterSpacing: 1.1,
           ),
         ),
       ],
@@ -255,24 +290,39 @@ class _FlipIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.touch_app_outlined,
-          size: 16,
-          color: AppColors.onSurfaceVariant,
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHigh.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.outlineVariant.withValues(alpha: 0.45),
         ),
-        const SizedBox(width: AppSpacing.xs),
-        Text(
-          isFlipped ? 'Tap to see front' : 'Tap to reveal answer',
-          style: const TextStyle(
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.touch_app_outlined,
+            size: 15,
             color: AppColors.onSurfaceVariant,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
           ),
-        ),
-      ],
+
+          const SizedBox(width: AppSpacing.sm),
+
+          Text(
+            isFlipped ? 'Tap to see front' : 'Tap to reveal answer',
+            style: const TextStyle(
+              color: AppColors.onSurfaceVariant,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
