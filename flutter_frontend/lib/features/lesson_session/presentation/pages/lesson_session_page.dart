@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/lesson_session_state.dart';
 import '../providers/lesson_session_provider.dart';
 import '../widgets/session_scaffold.dart';
+import 'feedbck_page.dart';
 import 'lesson_feedback_page.dart';
+import '../widgets/particle_widget.dart';
+import 'topic_completion_page.dart';
 
 class LessonSessionPage extends ConsumerStatefulWidget {
   const LessonSessionPage({super.key});
@@ -38,7 +41,8 @@ class _LessonSessionPageState extends ConsumerState<LessonSessionPage> {
         body: Center(child: CircularProgressIndicator()),
       ),
 
-      LessonSessionCompleted() => LessonFeedbackPage(feedback: state.feedback),
+      LessonSessionCompleted() => TopicCompletionPage(),
+      // LessonFeedbackPage(feedback: state.feedback),
     };
   }
 }
