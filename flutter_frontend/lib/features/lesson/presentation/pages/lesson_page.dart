@@ -8,7 +8,6 @@ import '../models/lesson_block.dart';
 import '../widgets/assistant_chip_bar.dart';
 import '../widgets/lesson_bottom_action.dart';
 import '../widgets/lesson_content.dart';
-import '../widgets/lesson_progress.dart';
 import '../controller/lesson_reveal_controller.dart';
 
 class LessonPage extends StatefulWidget {
@@ -16,14 +15,12 @@ class LessonPage extends StatefulWidget {
     super.key,
     required this.title,
     required this.blocks,
-    required this.progress,
     this.assistantActions = const [],
     required this.onNext,
   });
 
   final String title;
   final List<LessonBlock> blocks;
-  final double progress;
   final List<AssistantAction> assistantActions;
   final VoidCallback onNext;
 
@@ -60,16 +57,9 @@ class _LessonPageState extends State<LessonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      // appBar: LessonAppBar(title: widget.title),
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.mobileMargin),
-
-              child: LessonProgress(value: widget.progress),
-            ),
-
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(

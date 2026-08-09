@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mnemosyne_learn/features/home/presentation/widgets/app_progress_bar.dart';
 
+import '../providers/lesson_session_provider.dart';
+import '../controllers/lesson_session_state.dart';
 import 'step_host.dart';
 
-class SessionScaffold extends StatelessWidget {
+class SessionScaffold extends ConsumerWidget {
   const SessionScaffold({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: const StepHost()));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress =
+        (ref.watch(lessonSessionControllerProvider) as LessonSessionRunning)
+            .progress
+            .clamp(0.0, 1.0);
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            AppProgressBar(progress: progress),
+
+            const Expanded(child: StepHost()),
+          ],
+        ),
+      ),
+    );
   }
 }

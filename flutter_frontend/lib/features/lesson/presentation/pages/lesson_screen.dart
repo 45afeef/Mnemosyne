@@ -26,7 +26,6 @@ class LessonScreen extends ConsumerWidget {
 
     return LessonPage(
       title: step.title,
-      progress: 0.4,
       blocks: blocks,
       assistantActions: step.content.title
           .split("")
