@@ -11,16 +11,18 @@ class SessionScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final progress =
+    final actualProgress =
         (ref.watch(lessonSessionControllerProvider) as LessonSessionRunning)
             .progress
             .clamp(0.0, 1.0);
+
+    final visualProgress = 0.06 + (actualProgress * 0.94);
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            AppProgressBar(progress: progress),
+            AppProgressBar(progress: visualProgress),
 
             const Expanded(child: StepHost()),
           ],
