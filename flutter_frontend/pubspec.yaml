@@ -45,6 +45,8 @@ dependencies:
   path: ^1.9.1
   dotted_border: ^3.1.0
   json_annotation: ^4.12.0
+  flutter_markdown: ^0.7.7+1
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +79,8 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/logo wordmark.png
+    - .env
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

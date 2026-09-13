@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/routes.dart';
-import '../../domain/entities/learning_goal.dart';
-import '../notifier/goal_notifier.dart';
 import '../../../../app/theme/app_buttons.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../domain/entities/learning_goal.dart';
+import '../notifier/goal_notifier.dart';
 import '../provider/goal_provider.dart';
 import '../provider/syllabus_provider.dart';
 
@@ -20,7 +20,9 @@ class NewGoalPage extends ConsumerStatefulWidget {
 }
 
 class _NewGoalPageState extends ConsumerState<NewGoalPage> {
-  final TextEditingController _goalController = TextEditingController();
+  final TextEditingController _goalNameController = TextEditingController();
+  final TextEditingController _goalDescriptionController =
+      TextEditingController();
 
   final TextEditingController _deadlineController = TextEditingController();
 
@@ -35,7 +37,8 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
 
   @override
   void dispose() {
-    _goalController.dispose();
+    _goalNameController.dispose();
+    _goalDescriptionController.dispose();
     _deadlineController.dispose();
     super.dispose();
   }
@@ -62,7 +65,7 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
       goalNotifier.saveGoal();
 
       var state = ref.read(goalNotifierProvider);
-      LearningGoal goal = state.selectedGoal ?? state.draftGoal!;
+      LearningGoal goal = state.draftGoal!;
 
       ref.read(syllabusNotifierProvider.notifier).generateSyllabus(goal: goal);
 
@@ -101,7 +104,7 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
               child: Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryContainer.withOpacity(.08),
+                  color: AppColors.primaryContainer.withValues(alpha: .08),
                   borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
                 child: const Icon(
@@ -129,7 +132,7 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
             const SizedBox(height: 8),
 
             TextField(
-              controller: _goalController,
+              controller: _goalNameController,
 
               onChanged: (value) {
                 ref.read(goalNotifierProvider.notifier).updateName(value);
@@ -140,6 +143,25 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
               decoration: _inputDecoration(
                 Icons.psychology_outlined,
                 "e.g. Learn Machine Learning",
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            TextField(
+              controller: _goalDescriptionController,
+
+              onChanged: (value) {
+                ref
+                    .read(goalNotifierProvider.notifier)
+                    .updateDescription(value);
+              },
+
+              style: const TextStyle(color: AppColors.onSurface),
+
+              decoration: _inputDecoration(
+                Icons.psychology_outlined,
+                "e.g. Detailed description if any (optional)",
               ),
             ),
 
@@ -206,7 +228,7 @@ class _NewGoalPageState extends ConsumerState<NewGoalPage> {
 
         decoration: BoxDecoration(
           color: selected
-              ? AppColors.primaryContainer.withOpacity(.15)
+              ? AppColors.primaryContainer.withValues(alpha: .15)
               : AppColors.surfaceLow,
 
           borderRadius: BorderRadius.circular(AppRadius.lg),

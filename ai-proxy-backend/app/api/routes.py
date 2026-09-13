@@ -39,12 +39,10 @@ def service(
 @router.post("/generateSyllabusFromGoal", response_model=SyllabusResponse)
 async def generate_syllabus(
     request: LearningGoalRequest,
-    taxonomy_id: int,
+    taxonomy_id: int = 1,
     learning_service: LearningService = Depends(service),
 ):
-
     try:
-
         return await (
             learning_service
             .generate_syllabus_from_goal(
@@ -54,7 +52,6 @@ async def generate_syllabus(
         )
 
     except ValueError as error:
-
         raise HTTPException(
             status_code=404,
             detail=str(error),

@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import '../../../../app/database_helper.dart';
+import '../../../../app/data/database_helper.dart';
 import '../../domain/entities/learning_goal.dart';
 import '../../domain/repositories/goal_repository.dart';
 

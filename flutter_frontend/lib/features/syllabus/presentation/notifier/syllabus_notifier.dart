@@ -1,27 +1,74 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../domain/entities/learning_goal.dart';
 import '../../domain/entities/learning_item.dart';
 import '../../domain/entities/module.dart';
-import '../../domain/entities/learning_goal.dart';
-import '../../domain/entities/syllabus.dart';
-import '../../domain/repositories/syllabus_repository.dart';
-import '../state/syllabus_status.dart';
 import '../../domain/entities/subject.dart';
+import '../../domain/entities/syllabus.dart';
+import '../../domain/repositories/goal_repository.dart';
+import '../../domain/repositories/syllabus_repository.dart';
 import '../state/syllabus_state.dart';
+import '../state/syllabus_status.dart';
 
 class SyllabusNotifier extends StateNotifier<SyllabusState> {
   final SyllabusRepository repository;
+  final LearningGoalRepository goalRepository;
 
-  SyllabusNotifier(this.repository) : super(const SyllabusState());
+  SyllabusNotifier(this.repository, this.goalRepository)
+    : super(const SyllabusState()) {
+    Future.microtask(_initialize);
+  }
+
+  Future<void> _initialize() async {
+    try {
+      final id = await repository.getCurrentSyllabusId();
+
+      if (id != null && id.isNotEmpty) {
+        await loadSyllabus(id);
+        return;
+      }
+
+      // no current syllabus — try to load current goal's latest syllabus
+      String? goalId = await repository.getCurrentGoalId();
+
+      if (goalId == null) {
+        // if there's no current goal, pick the first saved goal
+        final goals = await goalRepository.getGoals();
+
+        if (goals.isNotEmpty) {
+          goalId = goals.first.id;
+        }
+      }
+
+      if (goalId != null) {
+        final latest = await repository.getLatestSyllabusForGoal(goalId);
+
+        if (latest != null) {
+          await loadSyllabus(latest.id);
+        } else {
+          // generate syllabus for the selected goal
+          final goal = await goalRepository.getGoalById(goalId);
+
+          if (goal != null) {
+            await generateSyllabus(goal: goal);
+          }
+        }
+      }
+    } catch (e) {
+      state = state.copyWith(
+        status: SyllabusStatus.error,
+        errorMessage: e.toString(),
+      );
+    }
+  }
 
   /// Generate syllabus from goal
-
   Future<void> generateSyllabus({required LearningGoal goal}) async {
     state = state.copyWith(status: SyllabusStatus.generating);
 
     try {
-      final syllabus = await repository.generateFromGoal(learningGoal: goal);
+      final syllabus = await repository.generateFromGoal(goal: goal);
 
       state = state.copyWith(syllabus: syllabus, status: SyllabusStatus.ready);
     } catch (e) {
@@ -39,6 +86,11 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
 
     try {
       final syllabus = await repository.getSyllabusById(id);
+
+      // persist current syllabus selection
+      if (syllabus != null) {
+        await repository.setCurrentSyllabusId(syllabus.id);
+      }
 
       state = state.copyWith(syllabus: syllabus, status: SyllabusStatus.ready);
     } catch (e) {
@@ -67,6 +119,9 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
 
     try {
       await repository.updateSyllabus(syllabus);
+
+      // ensure current syllabus is set
+      await repository.setCurrentSyllabusId(syllabus.id);
 
       state = state.copyWith(status: SyllabusStatus.ready);
     } catch (e) {
@@ -226,7 +281,7 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
               id: const Uuid().v4(),
               title: "New Topic",
               description: "",
-              order: module.learningItems.length + 1,
+              content: "",
             ),
           ],
         );
@@ -252,7 +307,7 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
           Module(
             id: const Uuid().v4(),
             name: "New Module",
-            order: subject.modules.length + 1,
+            description: "",
             learningItems: const [],
           ),
         ],
@@ -284,10 +339,7 @@ class SyllabusNotifier extends StateNotifier<SyllabusState> {
         items.insert(newIndex, moved);
 
         return module.copyWith(
-          learningItems: [
-            for (int i = 0; i < items.length; i++)
-              items[i].copyWith(order: i + 1),
-          ],
+          learningItems: [for (int i = 0; i < items.length; i++) items[i]],
         );
       }).toList();
 

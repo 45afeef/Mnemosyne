@@ -1,16 +1,17 @@
 import 'package:equatable/equatable.dart';
+
 import 'learning_item.dart';
 
 class Module extends Equatable {
   final String id;
   final String name;
-  final int order;
+  final String description;
   final List<LearningItem> learningItems;
 
   const Module({
     required this.id,
     required this.name,
-    required this.order,
+    required this.description,
     this.learningItems = const [],
   });
 
@@ -23,11 +24,11 @@ class Module extends Equatable {
     return Module(
       id: id ?? this.id,
       name: name ?? this.name,
-      order: order ?? this.order,
+      description: description,
       learningItems: learningItems ?? this.learningItems,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, order, learningItems];
+  List<Object?> get props => [id, name, description, learningItems];
 }

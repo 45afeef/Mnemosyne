@@ -45,6 +45,7 @@ class PromptBuilder:
 
     @staticmethod
     def build_syllabus_prompt(
+        goal_name: str,
         goal_description: str,
         taxonomy: Taxonomy,
         stages: List[Stage],
@@ -71,6 +72,8 @@ Description:
         )
 
         return SYLLABUS_GENERATION_PROMPT.format(
+            goal_name = goal_name,
+
             goal_description=goal_description,
 
             name=taxonomy.name,

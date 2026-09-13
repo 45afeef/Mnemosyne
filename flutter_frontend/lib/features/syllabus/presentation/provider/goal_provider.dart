@@ -7,7 +7,6 @@ import '../state/goal_state.dart';
 final goalNotifierProvider = StateNotifierProvider<GoalNotifier, GoalState>((
   ref,
 ) {
-  final repository = ref.watch(learningGoalRepositoryProvider);
-
+  final repository = ref.read(learningGoalRepositoryProvider);
   return GoalNotifier(repository);
 });

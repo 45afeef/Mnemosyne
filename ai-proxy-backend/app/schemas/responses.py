@@ -67,9 +67,9 @@ class SyllabusResponse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    goal_description: str
+    title: str
 
-    taxonomy_name: str
+    description: str
 
     subjects: List[SubjectResponse] = Field(default_factory=list)
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mnemosyne_learn/app/providers/app_providers.dart';
+import '../../../lesson_session/presentation/providers/lesson_session_provider.dart';
 import 'package:mnemosyne_learn/app/router/routes.dart';
 
 import '../../../../app/theme/app_colors.dart';
@@ -13,11 +15,43 @@ import '../../domain/entities/learning_item.dart';
 import '../provider/syllabus_provider.dart';
 import '../notifier/syllabus_notifier.dart';
 
-class ReviewSyllabusPage extends ConsumerWidget {
+class ReviewSyllabusPage extends ConsumerStatefulWidget {
   const ReviewSyllabusPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ReviewSyllabusPage> createState() => _ReviewSyllabusPageState();
+}
+
+class _ReviewSyllabusPageState extends ConsumerState<ReviewSyllabusPage> {
+  final Set<String> _completedTopics = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletedTopics();
+  }
+
+  Future<void> _loadCompletedTopics() async {
+    final db = await ref.read(databaseHelperProvider).database;
+    final rows = await db.query(
+      'lesson_sessions',
+      where: 'is_completed = ?',
+      whereArgs: [1],
+    );
+
+    setState(() {
+      _completedTopics.clear();
+      for (final row in rows) {
+        final topic = row['topic'] as String?;
+        if (topic != null && topic.isNotEmpty) {
+          _completedTopics.add(topic);
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final syllabus = ref.watch(syllabusNotifierProvider).syllabus;
     final syllabusNotifier = ref.read(syllabusNotifierProvider.notifier);
 
@@ -62,7 +96,7 @@ class ReviewSyllabusPage extends ConsumerWidget {
 
                     const SizedBox(height: AppSpacing.lg),
                     if (syllabus == null)
-                      Center(child: Text("No Syllabus"))
+                      const Center(child: Text("No Syllabus"))
                     else
                       ...syllabus.subjects.map(
                         (subject) =>
@@ -329,11 +363,13 @@ class ReviewSyllabusPage extends ConsumerWidget {
     required LearningItem topic,
     required int index,
   }) {
+    final completed = _completedTopics.contains(topic.title);
+
     return Container(
       key: key,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: completed ? AppColors.surfaceLow : AppColors.surfaceContainer,
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
       child: ListTile(
@@ -352,6 +388,19 @@ class ReviewSyllabusPage extends ConsumerWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (completed)
+              const Icon(Icons.check_circle, color: AppColors.primary)
+            else
+              IconButton(
+                icon: const Icon(Icons.play_arrow),
+                color: AppColors.primary,
+                onPressed: () async {
+                  // Start a session for this single learning item
+                  // navigate to lesson session
+                  context.push(Routes.lessonSession, extra: [topic.id]);
+                },
+              ),
+
             IconButton(
               icon: const Icon(Icons.edit),
               color: AppColors.primary,
@@ -367,6 +416,8 @@ class ReviewSyllabusPage extends ConsumerWidget {
                   moduleId: module.id,
                   topicId: topic.id,
                 );
+                // refresh completed list in case deletion affects UI
+                _loadCompletedTopics();
               },
             ),
           ],

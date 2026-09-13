@@ -8,10 +8,10 @@ part of 'learning_item_model.dart';
 
 LearningItemModel _$LearningItemModelFromJson(Map<String, dynamic> json) =>
     LearningItemModel(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      order: (json['order'] as num).toInt(),
+      id: json['id'] as String? ?? const Uuid().v4(),
+      title: json['name'] as String,
       description: json['description'] as String,
+      content: json['content'] as String,
       children:
           (json['children'] as List<dynamic>?)
               ?.map(
@@ -24,8 +24,8 @@ LearningItemModel _$LearningItemModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$LearningItemModelToJson(LearningItemModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
+      'name': instance.title,
       'description': instance.description,
-      'order': instance.order,
+      'content': instance.content,
       'children': instance.children.map((e) => e.toJson()).toList(),
     };

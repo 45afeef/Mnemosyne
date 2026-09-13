@@ -17,6 +17,10 @@ class LearningGoalRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    name: str = Field(
+        ...,
+    )
+
     description: str = Field(
         ...,
         description="Learning goal written by user",

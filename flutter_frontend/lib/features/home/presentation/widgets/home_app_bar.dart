@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../../../app/router/routes.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -41,6 +43,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       actions: [
         IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+
+        IconButton(
+          onPressed: () => context.push(Routes.goalList),
+          icon: const Icon(Icons.flag, color: AppColors.primary),
+          tooltip: 'Change goal',
+        ),
 
         IconButton(
           onPressed: () {},

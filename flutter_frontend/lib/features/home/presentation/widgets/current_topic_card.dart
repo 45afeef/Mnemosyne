@@ -16,7 +16,7 @@ class CurrentTopicCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(AppRadius.lg),
       onTap: () {
-        context.push(Routes.learnEntry);
+        context.push(Routes.syllabusCompact);
       },
       child: Container(
         padding: const EdgeInsets.all(24),

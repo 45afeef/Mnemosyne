@@ -7,9 +7,9 @@ part of 'subject_model.dart';
 // **************************************************************************
 
 SubjectModel _$SubjectModelFromJson(Map<String, dynamic> json) => SubjectModel(
-  id: json['id'] as String,
+  id: json['id'] as String? ?? const Uuid().v4(),
   name: json['name'] as String,
-  order: (json['order'] as num).toInt(),
+  description: json['description'] as String,
   modules: (json['modules'] as List<dynamic>)
       .map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -19,6 +19,6 @@ Map<String, dynamic> _$SubjectModelToJson(SubjectModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'order': instance.order,
+      'description': instance.description,
       'modules': instance.modules.map((e) => e.toJson()).toList(),
     };

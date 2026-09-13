@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/subject.dart';
 import 'module_model.dart';
@@ -10,13 +11,13 @@ part 'subject_model.g.dart';
 class SubjectModel {
   final String id;
   final String name;
-  final int order;
+  final String description;
   final List<ModuleModel> modules;
 
   const SubjectModel({
     required this.id,
     required this.name,
-    required this.order,
+    required this.description,
     required this.modules,
   });
 
@@ -24,7 +25,7 @@ class SubjectModel {
     return Subject(
       id: id,
       name: name,
-      order: order,
+      description: description,
       modules: modules.map((e) => e.toEntity()).toList(),
     );
   }
@@ -33,7 +34,7 @@ class SubjectModel {
     return SubjectModel(
       id: entity.id,
       name: entity.name,
-      order: entity.order,
+      description: entity.description,
       modules: entity.modules.map(ModuleModel.fromEntity).toList(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/module.dart';
 import 'learning_item_model.dart';
@@ -9,13 +10,13 @@ part 'module_model.g.dart';
 class ModuleModel {
   final String id;
   final String name;
-  final int order;
+  final String description;
   final List<LearningItemModel> learningItems;
 
   const ModuleModel({
     required this.id,
     required this.name,
-    required this.order,
+    required this.description,
     required this.learningItems,
   });
 
@@ -23,7 +24,7 @@ class ModuleModel {
     return Module(
       id: id,
       name: name,
-      order: order,
+      description: description,
       learningItems: learningItems.map((e) => e.toEntity()).toList(),
     );
   }
@@ -32,7 +33,7 @@ class ModuleModel {
     return ModuleModel(
       id: entity.id,
       name: entity.name,
-      order: entity.order,
+      description: entity.description,
       learningItems: entity.learningItems
           .map(LearningItemModel.fromEntity)
           .toList(),

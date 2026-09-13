@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/syllabus/presentation/pages/generating_roadmap_page.dart';
-import '../../features/syllabus/presentation/pages/syllabus_page.dart';
-import '../../features/onboarding/presentation/pages/onboarding_page.dart';
-import '../../features/syllabus/presentation/pages/goal_page.dart';
 import '../../features/home/presentation/home_page.dart';
+import '../../features/lesson_session/presentation/pages/lesson_session_page.dart';
+import '../../features/lesson_session/presentation/pages/session_entry_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
-import '../../features/lesson/presentation/pages/learning_entry_page.dart';
+import '../../features/syllabus/presentation/pages/generating_roadmap_page.dart';
+import '../../features/syllabus/presentation/pages/goal_list_page.dart';
+import '../../features/syllabus/presentation/pages/goal_page.dart';
+import '../../features/syllabus/presentation/pages/syllabus_compact_page.dart';
+import '../../features/syllabus/presentation/pages/syllabus_page.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -25,11 +28,12 @@ class AppRouter {
         builder: (_, _) => const OnboardingPage(),
       ),
 
-      GoRoute(path: Routes.home, builder: (_, __) => const HomePage()),
+      GoRoute(path: Routes.home, builder: (_, _) => const HomePage()),
       GoRoute(
         path: Routes.goalSettingPage,
         builder: (_, _) => const NewGoalPage(),
       ),
+      GoRoute(path: Routes.goalList, builder: (_, _) => const GoalListPage()),
       GoRoute(
         path: Routes.generatingRoadmap,
         builder: (_, _) => const GeneratingRoadmapPage(),
@@ -40,9 +44,20 @@ class AppRouter {
       ),
       GoRoute(
         path: Routes.learnEntry,
-        builder: (_, _) => const LearnPathPage(),
+        builder: (_, _) => const SessionEnrtyPage(),
       ),
-      
+      GoRoute(
+        path: Routes.syllabusCompact,
+        builder: (_, _) => const CompactSyllabusPage(),
+      ),
+      GoRoute(
+        path: Routes.lessonSession,
+        builder: (context, state) {
+          final learningItemIds = state.extra as List<String>?;
+
+          return LessonSessionPage(learningItemIds: learningItemIds);
+        },
+      ),
     ],
 
     errorBuilder: (_, _) {

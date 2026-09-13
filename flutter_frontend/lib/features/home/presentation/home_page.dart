@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
           text: "Continue",
           icon: Icons.play_arrow,
           onPressed: () {
-            context.push(Routes.learnEntry);
+            context.push(Routes.lessonSession);
           },
         ),
       ),

@@ -8,7 +8,7 @@ part of 'syllabus_model.dart';
 
 SyllabusModel _$SyllabusModelFromJson(Map<String, dynamic> json) =>
     SyllabusModel(
-      id: json['id'] as String,
+      id: json['id'] as String? ?? const Uuid().v4(),
       title: json['title'] as String,
       description: json['description'] as String,
       subjects: (json['subjects'] as List<dynamic>)

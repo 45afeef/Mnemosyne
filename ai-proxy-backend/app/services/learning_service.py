@@ -99,9 +99,8 @@ class LearningService:
         prompt = (
             self.prompt_builder
             .build_syllabus_prompt(
-                goal_description=(
-                    request.description
-                ),
+                goal_name = (request.name),
+                goal_description=(request.description),
                 taxonomy=taxonomy,
                 stages=stages,
             )
@@ -116,8 +115,8 @@ class LearningService:
         result_payload = result if isinstance(result, dict) else {}
 
         return SyllabusResponse(
-            goal_description=request.description,
-            taxonomy_name=taxonomy.name,
+            title=result_payload.get("title", ""),
+            description=request.description,
             subjects=result_payload.get("subjects", []),
         )
 

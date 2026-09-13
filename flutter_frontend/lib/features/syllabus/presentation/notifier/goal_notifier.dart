@@ -1,16 +1,19 @@
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../../domain/entities/learning_goal.dart';
-
 import '../../domain/repositories/goal_repository.dart';
 import '../state/goal_state.dart';
-
 import '../state/goal_status.dart';
 
 class GoalNotifier extends StateNotifier<GoalState> {
   final LearningGoalRepository repository;
 
-  GoalNotifier(this.repository) : super(const GoalState());
+  GoalNotifier(this.repository) : super(const GoalState()) {
+    // on creation, load goals and select persisted current goal if available
+    Future.microtask(() async {
+      await loadGoals();
+    });
+  }
 
   // Start creating a new goal
   void startCreatingGoal() {

@@ -4,14 +4,14 @@ class LearningItem extends Equatable {
   final String id;
   final String title;
   final String description;
-  final int order;
+  final String content;
   final List<LearningItem> children;
 
   const LearningItem({
     required this.id,
     required this.title,
     required this.description,
-    required this.order,
+    required this.content,
     this.children = const [],
   });
 
@@ -19,14 +19,14 @@ class LearningItem extends Equatable {
     String? id,
     String? title,
     String? description,
-    int? order,
+    String? content,
     List<LearningItem>? children,
   }) {
     return LearningItem(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
-      order: order ?? this.order,
+      content: content ?? this.content,
       children: children ?? this.children,
     );
   }
@@ -41,5 +41,5 @@ class LearningItem extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, title, description, order, children];
+  List<Object?> get props => [id, title, description, content, children];
 }

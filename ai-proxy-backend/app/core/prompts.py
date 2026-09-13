@@ -22,6 +22,7 @@ You must NOT invent new stages or new hierarchy types.
 Use the provided structure and generate meaningful subjects, modules, and learning items.
 
 Learning Goal:
+{goal_name}
 {goal_description}
 
 
@@ -49,6 +50,7 @@ Requirements:
 JSON format:
 
 {{
+    "title": "",
     "subjects": [
         {{
             "name": "",

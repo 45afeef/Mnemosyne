@@ -28,7 +28,7 @@ class DatabaseHelper {
       onCreate: (db, version) async {
         await db.execute('''
         CREATE TABLE learning_goals(
-          id TEXT PRIMARY KEY,
+          id TEXT PRIMARY KEY NOT NULL,
           name TEXT NOT NULL,
           description TEXT,
           end_date TEXT,
@@ -41,6 +41,27 @@ class DatabaseHelper {
         CREATE TABLE syllabuses (
           id TEXT PRIMARY KEY NOT NULL,
           content TEXT NOT NULL,
+          goal_id TEXT NOT NULL,
+          created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+          updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+          FOREIGN KEY (goal_id) REFERENCES learning_goals(id) ON DELETE CASCADE
+        )
+        ''');
+
+        await db.execute('''
+        CREATE TABLE app_state (
+          key TEXT PRIMARY KEY NOT NULL,
+          value TEXT
+        )
+        ''');
+
+        await db.execute('''
+        CREATE TABLE lesson_sessions (
+          id TEXT PRIMARY KEY NOT NULL,
+          learning_item_ids TEXT NOT NULL, 
+          topic TEXT NOT NULL,
+          content TEXT NOT NULL,
+          is_completed INTEGER NOT NULL DEFAULT 0,
           created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
           updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now'))
         )
